@@ -1,0 +1,60 @@
+# Archivos generados por Eclipse
+.settings/
+.project
+.classpath
+
+# Archivos de compilación Java
+bin/
+*.class
+
+# Archivos de empaquetado Java
+*.jar
+*.war
+*.ear
+
+# Archivos de configuración específicos del usuario de Eclipse
+org.eclipse.core.runtime/.settings/
+
+# Archivos de índices y caché de Eclipse
+.metadata/
+p2/
+
+# Archivos temporales y de respaldo de Eclipse
+*.bak
+*~
+*.swp
+.tmp
+
+# Archivos de depuración
+*.log
+
+# Archivos de anotaciones de procesamiento (si los usas)
+.apt_generated/
+.apt_source_output/
+
+# Archivos de construcción de Maven (si usas Maven)
+target/
+pom.xml.tag
+pom.xml.releaseBackup.*
+pom.xml.versionsBackup.*
+pom.xml.nextVersion.*
+pom.xml.timestamp.*
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+
+# Archivos de construcción de Gradle (si usas Gradle)
+.gradle/
+build/
+*.gradle
+*.iml
+.classpath
+.project
+
+# Archivos de IntelliJ IDEA (si también usas IntelliJ)
+.idea/
+
+# Otros archivos y directorios que quieras ignorar
+# Ejemplos:
+# secret.properties
+# data/
