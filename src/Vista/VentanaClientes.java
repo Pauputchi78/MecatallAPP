@@ -15,6 +15,7 @@ import javax.swing.JTextField;
 import javax.swing.JMenuBar;
 import java.awt.Color;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import java.awt.Component;
 import java.awt.event.MouseAdapter;
@@ -123,6 +124,15 @@ public class VentanaClientes extends JFrame {
 		panel.add(textFieldnombre);
 		
 		textFieldtel = new JTextField();
+		textFieldtel.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent e) {
+				char a = e.getKeyChar();
+				if(Character.isDigit(a) == false || textFieldtel.getText().length()>8) {
+					e.consume();
+				}
+			}
+		});
 		textFieldtel.setColumns(10);
 		textFieldtel.setBounds(101, 98, 212, 20);
 		panel.add(textFieldtel);
@@ -147,12 +157,24 @@ public class VentanaClientes extends JFrame {
 		panel.add(menuBar);
 		
 		JMenu mnNewMenu_1 = new JMenu("Inicio");
+		mnNewMenu_1.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				principal.mostrarVentana("Inicio", true);
+				principal.mostrarVentana("Clientes", false);
+			}
+		});
 		menuBar.add(mnNewMenu_1);
 		
 		JMenu mnNewMenu = new JMenu("Cliente");
 		menuBar.add(mnNewMenu);
 		
 		JMenuItem mntmNewMenuItem = new JMenuItem("Nuevo");
+		mntmNewMenuItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				vaciarCampos();
+			}
+		});
 		mnNewMenu.add(mntmNewMenuItem);
 		
 		JMenuItem mntmNewMenuItem_1 = new JMenuItem("Buscar");
@@ -167,15 +189,17 @@ public class VentanaClientes extends JFrame {
 				String direc = textFielddire.getText();
 				String ciudad = textFieldCiudad.getText();
 				if(dni.isEmpty()|| nombre.trim().isEmpty()||tel.isEmpty()|| direc.trim().isEmpty()|| ciudad.trim().isEmpty()) {
-					System.out.println("Rellene campos vacios");
+					JOptionPane.showMessageDialog(VentanaClientes.this, "Es necesario rellenar todos los campos para insertar un cliente", "CAMPOS VACIOS", JOptionPane.ERROR_MESSAGE);
 				}else {
 					if(verificarDNI(dni)== false) {
-						System.out.println("DNI no valido");
+						
+						textFieldnif.setForeground(Color.RED);
 					}else {
 						int telefono = Integer.parseInt(tel);
 						Cliente p = new Cliente(dni, nombre, telefono, direc, ciudad);
 						principal.clientes.add(p);
-						System.out.println("Cliente insertado");
+						JOptionPane.showMessageDialog(VentanaClientes.this, "El clinete se ha insertado correctamente", "CORRECTO", JOptionPane.INFORMATION_MESSAGE);
+						vaciarCampos();
 					}
 				}
 			}
@@ -190,28 +214,42 @@ public class VentanaClientes extends JFrame {
 	}
 	
 	public boolean verificarDNI(String dni) {
-		boolean correcto = true;
 		for(Cliente c : principal.clientes) {
 			if(c.getNif().equalsIgnoreCase(dni)== true) {
-				System.out.println("Ya existe un clinete con este nif");
-				correcto = false;
+				JOptionPane.showMessageDialog(VentanaClientes.this, "El NIF "+ dni +" ya esta asignado a un cliente", "NIF NO VALIDO", JOptionPane.ERROR_MESSAGE);
+				return false;
 			}
 		}
 		
-		if(dni.length()==9 && correcto == true) {
+		if(dni.length()==9) {
 			try {
 				int ndni = Integer.parseInt(dni.substring(0, 8));
 				char[] letras = {'T','R','W','A','G','M','Y','F','P','D','X','B','N','J','Z','S','Q','V','H','L','C','K','E' };
 				String compro = ""+ndni + letras[ndni%23];
 				if(compro.equalsIgnoreCase(dni)) {
 					return true;
+				}else {
+					JOptionPane.showMessageDialog(VentanaClientes.this, "El NIF "+ dni +" no existe", "NIF NO VALIDO", JOptionPane.ERROR_MESSAGE);
+					return false;
 				}
 				
 			}catch(Exception e) {
-				System.out.println("Dni no valido");
+				JOptionPane.showMessageDialog(VentanaClientes.this, "El NIF "+ dni +" tien un formato inadecuado", "NIF NO VALIDO", JOptionPane.ERROR_MESSAGE);
 			}
+		}else {
+			JOptionPane.showMessageDialog(VentanaClientes.this, "El NIF "+ dni +" es muy corto", "NIF NO VALIDO", JOptionPane.ERROR_MESSAGE);
 		}
+		
 		return false;
+	}
+	
+	public void vaciarCampos() {
+		textFieldnif.setForeground(Color.black);
+		textFieldnif.setText("");
+		textFieldnombre.setText("");
+		textFieldtel.setText("");
+		textFielddire.setText("");
+		textFieldCiudad.setText("");
 	}
 	
 
