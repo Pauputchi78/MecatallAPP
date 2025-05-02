@@ -27,6 +27,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 public class VentanaClientes extends JFrame {
 
@@ -58,7 +60,18 @@ public class VentanaClientes extends JFrame {
 	 * Create the frame.
 	 */
 	public VentanaClientes() {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				principal.mostrarVentana("Inicio", true);
+			}
+			@Override
+			public void windowActivated(WindowEvent e) {
+				principal.mostrarVentana("Inicio", false);
+			}
+		});
+		setTitle("Clientes");
+		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		setBounds(100, 100, 367, 279);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -162,6 +175,7 @@ public class VentanaClientes extends JFrame {
 						int telefono = Integer.parseInt(tel);
 						Cliente p = new Cliente(dni, nombre, telefono, direc, ciudad);
 						principal.clientes.add(p);
+						System.out.println("Cliente insertado");
 					}
 				}
 			}
