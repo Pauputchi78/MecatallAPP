@@ -10,6 +10,7 @@ import Modelo.Cliente;
 import Vista.Inicio;
 import Vista.VentanaClientes;
 
+
 public class principal {
 	public static ArrayList<Cliente> clientes = new ArrayList<Cliente>();
 	public static ArrayList<JFrame> ventanas = new ArrayList<JFrame>();
@@ -58,6 +59,7 @@ public class principal {
 	
 	return index;
 	}
+	
 	
 
 }

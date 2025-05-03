@@ -213,7 +213,7 @@ public class VentanaClientes extends JFrame {
 					String direc = textFielddire.getText();
 					String ciudad = textFieldCiudad.getText();
 					if(nombre.trim().isEmpty()||tel.isEmpty()|| direc.trim().isEmpty()|| ciudad.trim().isEmpty()) {
-						JOptionPane.showMessageDialog(VentanaClientes.this, "Los datos del clinete no pueden quedar vacios", "CAMPOS VACIOS", JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(VentanaClientes.this, "Los datos del cliente no pueden quedar vacios", "CAMPOS VACIOS", JOptionPane.ERROR_MESSAGE);
 					}else {
 						int respuesta = JOptionPane.showConfirmDialog(VentanaClientes.this, "Esta seguro de modificar este cliente","Modificar Clinete",JOptionPane.YES_NO_OPTION);
 						if(respuesta == JOptionPane.YES_OPTION) {
@@ -223,7 +223,7 @@ public class VentanaClientes extends JFrame {
 							c.setTel(telef);
 							c.setDirec(direc);
 							c.setCiudad(ciudad);
-							JOptionPane.showMessageDialog(VentanaClientes.this, "El clinete se ha modificado correctamente", "CORRECTO", JOptionPane.INFORMATION_MESSAGE);
+							JOptionPane.showMessageDialog(VentanaClientes.this, "El cliente se ha modificado correctamente", "CORRECTO", JOptionPane.INFORMATION_MESSAGE);
 						}
 					}
 				}
@@ -250,7 +250,17 @@ public class VentanaClientes extends JFrame {
 		});
 		mnNewMenu.add(mntmNewMenuItem_3);
 		
-		JMenu mnNewMenu_2 = new JMenu("Ver Todos");
+		JMenu mnNewMenu_2 = new JMenu("Seleccionar Cliente");
+		mnNewMenu_2.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				principal.mostrarVentana("Clientes", false);
+				SeleccionarCliente sc = new SeleccionarCliente(VentanaClientes.this);
+				sc.setVisible(true);
+				int numdev = sc.selectCli();
+				System.out.println(numdev);
+			}
+		});
 		menuBar.add(mnNewMenu_2);
 		
 		JMenu mnNewMenu_3 = new JMenu("Añadir");
@@ -279,7 +289,7 @@ public class VentanaClientes extends JFrame {
 			}
 		});
 		
-		JMenu mnNewMenu_4 = new JMenu("Nuevo Cliente");
+		JMenu mnNewMenu_4 = new JMenu("Nuevo");
 		mnNewMenu_4.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {

@@ -21,6 +21,9 @@ import java.awt.event.MouseEvent;
 import javax.swing.JMenu;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.Font;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 public class Inicio extends JFrame {
 
@@ -47,10 +50,11 @@ public class Inicio extends JFrame {
 	 * Create the frame.
 	 */
 	public Inicio() {
+		
 		setResizable(false);
 		setTitle("Inicio");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 559, 388);
+		setBounds(100, 100, 352, 388);
 		contentPane = new JPanel();
 		contentPane.setBackground(new Color(255, 255, 255));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -60,7 +64,7 @@ public class Inicio extends JFrame {
 		
 		JPanel panel = new JPanel();
 		panel.setBackground(new Color(248, 208, 154));
-		panel.setBounds(0, 0, 543, 349);
+		panel.setBounds(0, 0, 336, 349);
 		contentPane.add(panel);
 		panel.setLayout(null);
 		
@@ -69,12 +73,12 @@ public class Inicio extends JFrame {
 		ImageIcon anchonew = new ImageIcon(rescalada);
 		
 		JLabel lblLogo = new JLabel(anchonew);
-		lblLogo.setBounds(158, 89, 206, 187);
+		lblLogo.setBounds(60, 130, 206, 187);
 		panel.add(lblLogo);
 		
 		JMenuBar menuBar = new JMenuBar();
 		menuBar.setBackground(new Color(255, 255, 255));
-		menuBar.setBounds(0, 0, 543, 34);
+		menuBar.setBounds(0, 0, 336, 34);
 		panel.add(menuBar);
 		
 		JMenu mnNewMenu = new JMenu("Clientes");
@@ -89,6 +93,18 @@ public class Inicio extends JFrame {
 		
 		JMenu mnNewMenu_1 = new JMenu("Vehiculos");
 		menuBar.add(mnNewMenu_1);
+		
+		JLabel lblNewLabel = new JLabel("MECATALL APP");
+		lblNewLabel.setFont(new Font("Segoe Print", Font.BOLD, 21));
+		lblNewLabel.setBounds(79, 45, 196, 30);
+		panel.add(lblNewLabel);
+		
+		JButton btnNewButton = new JButton("Cargar");
+		btnNewButton.setBounds(23, 96, 89, 23);
+		panel.add(btnNewButton);
+		
+		JButton btnGuardar = new JButton("Guardar");
+		btnGuardar.setBounds(223, 96, 89, 23);
+		panel.add(btnGuardar);
 	}
-	
 }
