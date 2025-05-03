@@ -92,6 +92,12 @@ public class Inicio extends JFrame {
 		menuBar.add(mnNewMenu);
 		
 		JMenu mnNewMenu_1 = new JMenu("Vehiculos");
+		mnNewMenu_1.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				principal.mostrarVentana("Vehiculos", true);
+			}
+		});
 		menuBar.add(mnNewMenu_1);
 		
 		JLabel lblNewLabel = new JLabel("MECATALL APP");

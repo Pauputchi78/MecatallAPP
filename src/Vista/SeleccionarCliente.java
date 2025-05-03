@@ -28,7 +28,7 @@ public class SeleccionarCliente extends JDialog {
 	private final JPanel contentPanel = new JPanel();
 	private JTable table;
 	private DefaultTableModel tmodel;
-	private int clisele;
+	private int clisele = -1;
 
 
 	public SeleccionarCliente(JFrame padre) {
@@ -37,6 +37,10 @@ public class SeleccionarCliente extends JDialog {
 			@Override
 			public void windowActivated(WindowEvent e) {
 				rellenarTabla();
+			}
+			@Override
+			public void windowClosing(WindowEvent e) {
+				padre.setVisible(true);
 			}
 		});
 		setBounds(100, 100, 450, 300);
@@ -85,7 +89,6 @@ public class SeleccionarCliente extends JDialog {
 				JButton cancelButton = new JButton("Cancel");
 				cancelButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						clisele = -1;
 						dispose();
 						padre.setVisible(true);
 					}

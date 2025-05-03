@@ -9,6 +9,7 @@ import javax.swing.JFrame;
 import Modelo.Cliente;
 import Vista.Inicio;
 import Vista.VentanaClientes;
+import Vista.VentanaVehiculos;
 
 
 public class principal {
@@ -33,6 +34,10 @@ public class principal {
 		if(creada == false) {
 			if(nombre.equalsIgnoreCase("Clientes")) {
 				JFrame v = new VentanaClientes();
+				v.setVisible(visibilidad);
+				ventanas.add(v);
+			}else if(nombre.equalsIgnoreCase("Vehiculos")) {
+				JFrame v = new VentanaVehiculos();
 				v.setVisible(visibilidad);
 				ventanas.add(v);
 			}
