@@ -14,6 +14,7 @@ import Controlador.principal;
 import Modelo.Cliente;
 
 import javax.swing.JMenuBar;
+import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import java.awt.event.WindowAdapter;
@@ -66,9 +67,14 @@ public class SeleccionarCliente extends JDialog {
 				JButton okButton = new JButton("OK");
 				okButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						clisele = 1;
-						dispose();
-						padre.setVisible(true);
+						if(table.getSelectedRow()== -1) {
+							System.out.println("NO selec");
+						}else {
+							clisele = table.getSelectedRow();
+							dispose();
+							padre.setVisible(true);
+						}
+						
 					}
 				});
 				okButton.setActionCommand("OK");
@@ -77,6 +83,13 @@ public class SeleccionarCliente extends JDialog {
 			}
 			{
 				JButton cancelButton = new JButton("Cancel");
+				cancelButton.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						clisele = -1;
+						dispose();
+						padre.setVisible(true);
+					}
+				});
 				cancelButton.setActionCommand("Cancel");
 				buttonPane.add(cancelButton);
 			}

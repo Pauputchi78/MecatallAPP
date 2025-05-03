@@ -258,7 +258,9 @@ public class VentanaClientes extends JFrame {
 				SeleccionarCliente sc = new SeleccionarCliente(VentanaClientes.this);
 				sc.setVisible(true);
 				int numdev = sc.selectCli();
-				System.out.println(numdev);
+				if(numdev != -1) {
+					rellenarCampos(numdev);
+				}
 			}
 		});
 		menuBar.add(mnNewMenu_2);
@@ -275,7 +277,7 @@ public class VentanaClientes extends JFrame {
 				if(dni.isEmpty()|| nombre.trim().isEmpty()||tel.isEmpty()|| direc.trim().isEmpty()|| ciudad.trim().isEmpty()) {
 					JOptionPane.showMessageDialog(VentanaClientes.this, "Es necesario rellenar todos los campos para insertar un cliente", "CAMPOS VACIOS", JOptionPane.ERROR_MESSAGE);
 				}else {
-					if(verificarDNI(dni)== false) {
+					if(true == false) {//verificarDNI(dni)== false
 						
 						textFieldnif.setForeground(Color.RED);
 					}else {
