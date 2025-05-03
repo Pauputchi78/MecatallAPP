@@ -1,9 +1,16 @@
 package Controlador;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 
 import Modelo.Cliente;
@@ -78,6 +85,39 @@ public class principal {
 		}
 		
 		return true;
+	}
+	
+	public static String obtenerRuta() {
+		File f = new File(System.getProperty("user.home")+File.separator+"Desktop");
+		JFileChooser j = new JFileChooser(f);
+		j.setAcceptAllFileFilterUsed(false);
+		j.setFileSelectionMode(JFileChooser.FILES_ONLY);
+		int respuesta = j.showOpenDialog(null);
+		if(respuesta == JFileChooser.APPROVE_OPTION) {
+			return j.getSelectedFile().getAbsolutePath();
+		}
+		return null;
+	}
+	
+	public static void guardarTextoPlano(String ruta) {
+		File f;
+		FileWriter fw;
+		BufferedWriter bw;
+		
+		
+		try {
+			f = new File(ruta);
+			fw = new FileWriter(f);
+			bw = new BufferedWriter(fw);
+			for(Cliente c : clientes) {
+				bw.write(c.toString());
+				bw.newLine();
+			}
+			bw.flush();
+			bw.close();
+		}catch(Exception e) {
+			
+		}
 	}
 	
 	

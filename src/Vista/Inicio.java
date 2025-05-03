@@ -110,7 +110,19 @@ public class Inicio extends JFrame {
 		panel.add(btnNewButton);
 		
 		JButton btnGuardar = new JButton("Guardar");
+		btnGuardar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String ruta = principal.obtenerRuta();
+				if(ruta == null){
+					System.out.println("Ope cancel");
+				}else {
+					principal.guardarTextoPlano(ruta);
+				}
+			}
+		});
 		btnGuardar.setBounds(223, 96, 89, 23);
 		panel.add(btnGuardar);
 	}
+	
+	
 }

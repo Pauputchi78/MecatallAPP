@@ -46,6 +46,19 @@ public class Cliente {
 	}
 	public void setCiudad(String ciudad) {
 		this.ciudad = ciudad;
+	}
+	@Override
+	public String toString() {
+		if(Vehiculos.isEmpty() == false) {
+			String ve = "";
+			for(int i = 0; i<Vehiculos.size()-1;i++) {
+				ve = ve+Vehiculos.get(i).toString() + "\n";
+			}
+			ve = ve+Vehiculos.get(Vehiculos.size()-1);
+			return "Cliente-"+nif + "-" + nombre + "-" + tel + "-" + direc + "-" + ciudad +"\n"+ve;
+		}
+		
+		return "Cliente-"+nif + "-" + nombre + "-" + tel + "-" + direc + "-" + ciudad;
 	} 
 	
 	

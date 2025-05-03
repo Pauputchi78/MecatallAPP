@@ -214,7 +214,7 @@ public class VentanaVehiculos extends JFrame {
 	
 	public void vaciarCampos() {
 		textFieldNIF.setText("");
-		textFieldNIF.setText("");
+		textFieldNom.setText("");
 		textFieldMatricula.setText("");
 		textFieldModelo.setText("");
 		textFieldColor.setText("");
