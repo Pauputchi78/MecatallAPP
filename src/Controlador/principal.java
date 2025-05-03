@@ -7,6 +7,7 @@ import java.util.Comparator;
 import javax.swing.JFrame;
 
 import Modelo.Cliente;
+import Modelo.Vehiculo;
 import Vista.Inicio;
 import Vista.VentanaClientes;
 import Vista.VentanaVehiculos;
@@ -63,6 +64,20 @@ public class principal {
 		}
 	
 	return index;
+	}
+	
+	public static boolean validarMatricula(String matricula) {
+		for(int i = 0;i<clientes.size();i++) {
+			Cliente c = clientes.get(i);
+			for(int j = 0; j<c.Vehiculos.size();j++) {
+				Vehiculo v = c.Vehiculos.get(j);
+				if(matricula.equalsIgnoreCase(v.getMatricula())) {
+					return false;
+				}
+			}
+		}
+		
+		return true;
 	}
 	
 	

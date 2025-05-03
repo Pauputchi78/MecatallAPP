@@ -8,12 +8,14 @@ import javax.swing.border.EmptyBorder;
 
 import Controlador.principal;
 import Modelo.Cliente;
+import Modelo.Vehiculo;
 
 import javax.swing.JLabel;
 import javax.swing.JMenuBar;
 import javax.swing.JOptionPane;
 import javax.swing.JMenu;
 import javax.swing.JTextField;
+import javax.swing.SpinnerNumberModel;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -21,6 +23,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import javax.swing.JSpinner;
 
 public class VentanaVehiculos extends JFrame {
 
@@ -28,6 +31,10 @@ public class VentanaVehiculos extends JFrame {
 	private JPanel contentPane;
 	private JTextField textFieldNIF;
 	private JTextField textFieldNom;
+	private JTextField textFieldMatricula;
+	private JTextField textFieldModelo;
+	private JTextField textFieldColor;
+	private JSpinner spinnerAnio;
 
 	/**
 	 * Launch the application.
@@ -95,6 +102,40 @@ public class VentanaVehiculos extends JFrame {
 		});
 		menuBar.add(mnNewMenu);
 		
+		JMenu mnNewMenu_1 = new JMenu("Insertar Vehiculo");
+		mnNewMenu_1.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				int posi = principal.buscarClientePorDNI(textFieldNIF.getText());
+				if(posi != -1) {
+					String matricula = textFieldMatricula.getText();
+					String modelo = textFieldModelo.getText();
+					String color = textFieldColor.getText();
+					int aniomatri = (Integer) spinnerAnio.getValue();
+					if(matricula.isEmpty() || modelo.isEmpty()|| color.isEmpty()) {
+						JOptionPane.showMessageDialog(VentanaVehiculos.this, "Rellene todos los campos", "CAMPOS  VACIOS",JOptionPane.ERROR_MESSAGE);
+					}else {
+						if(principal.validarMatricula(matricula)) {
+							Cliente c = principal.clientes.get(posi);
+							Vehiculo v = new Vehiculo(matricula,color,modelo,aniomatri);
+							c.Vehiculos.add(v);
+							JOptionPane.showMessageDialog(VentanaVehiculos.this, "El vehiculo ha sido insertado correctamente", "Vehiculo Insertado",JOptionPane.INFORMATION_MESSAGE);
+							vaciarCampos();
+						}else {
+							JOptionPane.showMessageDialog(VentanaVehiculos.this, "La matricula ya esta asignada a una clinete", "Matricula Registrada",JOptionPane.ERROR_MESSAGE);
+						}
+					}
+				}else {
+					JOptionPane.showMessageDialog(VentanaVehiculos.this,"No se ha encontrado el NIF "+ textFieldNIF.getText(),"NO ENCONTRADO",JOptionPane.ERROR_MESSAGE);
+				}
+				
+			}
+		});
+		menuBar.add(mnNewMenu_1);
+		
+		JMenu mnNewMenu_3 = new JMenu("Mostrar Vehiculos");
+		menuBar.add(mnNewMenu_3);
+		
 		textFieldNIF = new JTextField();
 		textFieldNIF.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -133,5 +174,50 @@ public class VentanaVehiculos extends JFrame {
 		});
 		btnNewButton.setBounds(263, 50, 124, 23);
 		panel.add(btnNewButton);
+		
+		JLabel lblNewLabel_1 = new JLabel("MATRICULA");
+		lblNewLabel_1.setBounds(105, 100, 77, 14);
+		panel.add(lblNewLabel_1);
+		
+		textFieldMatricula = new JTextField();
+		textFieldMatricula.setColumns(10);
+		textFieldMatricula.setBounds(192, 100, 124, 20);
+		panel.add(textFieldMatricula);
+		
+		JLabel lblNewLabel_1_1 = new JLabel("MODELO");
+		lblNewLabel_1_1.setBounds(105, 125, 60, 14);
+		panel.add(lblNewLabel_1_1);
+		
+		textFieldModelo = new JTextField();
+		textFieldModelo.setColumns(10);
+		textFieldModelo.setBounds(192, 125, 124, 20);
+		panel.add(textFieldModelo);
+		
+		JLabel lblNewLabel_1_1_1 = new JLabel("COLOR");
+		lblNewLabel_1_1_1.setBounds(105, 150, 46, 14);
+		panel.add(lblNewLabel_1_1_1);
+		
+		textFieldColor = new JTextField();
+		textFieldColor.setColumns(10);
+		textFieldColor.setBounds(192, 150, 124, 20);
+		panel.add(textFieldColor);
+		
+		JLabel lblNewLabel_1_1_1_1 = new JLabel("AÑO MATRICULACIÓN");
+		lblNewLabel_1_1_1_1.setBounds(144, 185, 133, 14);
+		panel.add(lblNewLabel_1_1_1_1);
+		
+		SpinnerNumberModel spinermodel = new SpinnerNumberModel(2010,1950,2025,1);
+		spinnerAnio = new JSpinner(spinermodel);
+		spinnerAnio.setBounds(164, 210, 77, 20);
+		panel.add(spinnerAnio);
 	}
+	
+	public void vaciarCampos() {
+		textFieldNIF.setText("");
+		textFieldNIF.setText("");
+		textFieldMatricula.setText("");
+		textFieldModelo.setText("");
+		textFieldColor.setText("");
+	}
+	
 }
