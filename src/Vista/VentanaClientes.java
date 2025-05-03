@@ -169,14 +169,6 @@ public class VentanaClientes extends JFrame {
 		JMenu mnNewMenu = new JMenu("Cliente");
 		menuBar.add(mnNewMenu);
 		
-		JMenuItem mntmNewMenuItem = new JMenuItem("Nuevo");
-		mntmNewMenuItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				vaciarCampos();
-			}
-		});
-		mnNewMenu.add(mntmNewMenuItem);
-		
 		JMenuItem mntmNewMenuItem_1 = new JMenuItem("Buscar");
 		mntmNewMenuItem_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -188,13 +180,11 @@ public class VentanaClientes extends JFrame {
 					int busqueda = principal.buscarClientePorDNI(dni);
 					if(busqueda == -1) {
 						busqueda = principal.buscarClientePorNombre(nombre);
-						System.out.println("Busqueda 2");
 					}
 					if(busqueda == -1) {
 						JOptionPane.showMessageDialog(VentanaClientes.this, "El cliente no esta en la base de datos","Cliente no encontrado",JOptionPane.ERROR_MESSAGE);
 					}else {
-						System.out.println("Encontrado");
-						System.out.println(nombre + " "+ dni);
+						rellenarCampos(busqueda);
 					}
 					
 					
@@ -205,9 +195,19 @@ public class VentanaClientes extends JFrame {
 		});
 		mnNewMenu.add(mntmNewMenuItem_1);
 		
-		JMenuItem mntmNewMenuItem_2 = new JMenuItem("Añadir");
-		mntmNewMenuItem_2.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+		JMenuItem mntmNewMenuItem = new JMenuItem("Modificar");
+		mnNewMenu.add(mntmNewMenuItem);
+		
+		JMenuItem mntmNewMenuItem_3 = new JMenuItem("Eliminar");
+		mnNewMenu.add(mntmNewMenuItem_3);
+		
+		JMenu mnNewMenu_2 = new JMenu("Ver Todos");
+		menuBar.add(mnNewMenu_2);
+		
+		JMenu mnNewMenu_3 = new JMenu("Añadir");
+		mnNewMenu_3.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
 				String dni = textFieldnif.getText().trim();
 				String nombre = textFieldnombre.getText();
 				String tel = textFieldtel.getText().trim();
@@ -229,13 +229,16 @@ public class VentanaClientes extends JFrame {
 				}
 			}
 		});
-		mnNewMenu.add(mntmNewMenuItem_2);
 		
-		JMenuItem mntmNewMenuItem_3 = new JMenuItem("Eliminar");
-		mnNewMenu.add(mntmNewMenuItem_3);
-		
-		JMenu mnNewMenu_2 = new JMenu("Ver Todos");
-		menuBar.add(mnNewMenu_2);
+		JMenu mnNewMenu_4 = new JMenu("Nuevo Cliente");
+		mnNewMenu_4.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				vaciarCampos();
+			}
+		});
+		menuBar.add(mnNewMenu_4);
+		menuBar.add(mnNewMenu_3);
 	}
 	
 	public boolean verificarDNI(String dni) {
@@ -271,12 +274,28 @@ public class VentanaClientes extends JFrame {
 	public void vaciarCampos() {
 		textFieldnif.setForeground(Color.black);
 		textFieldnif.setText("");
+		textFieldnif.setEditable(true);
 		textFieldnombre.setText("");
+		textFieldnombre.setEditable(true);
 		textFieldtel.setText("");
+		textFieldtel.setEditable(true);
 		textFielddire.setText("");
+		textFielddire.setEditable(true);
 		textFieldCiudad.setText("");
+		textFieldCiudad.setEditable(true);
 	}
 	
-
-	
+	public void rellenarCampos(int posi) {
+		if(posi>=0 && posi<principal.clientes.size()) {
+			Cliente c = principal.clientes.get(posi);
+			textFieldnif.setText(c.getNif());
+			textFieldnif.setEditable(false);
+			textFieldnombre.setText(c.getNombre());
+			textFieldnombre.setEditable(false);
+			textFieldtel.setText(""+c.getTel());
+			textFielddire.setText(c.getDirec());
+			textFieldCiudad.setText(c.getCiudad());
+			
+		}
+	}
 }
