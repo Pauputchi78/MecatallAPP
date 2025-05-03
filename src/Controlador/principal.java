@@ -1,6 +1,8 @@
 package Controlador;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 import javax.swing.JFrame;
 
@@ -34,6 +36,27 @@ public class principal {
 				ventanas.add(v);
 			}
 		}
+	}
+	
+	public static int buscarClientePorDNI(String dni) {
+		int index = -1;
+			for(int i = 0; i<clientes.size();i++) {
+				if(clientes.get(i).getNif().equalsIgnoreCase(dni)) {
+					index = i;
+				}
+			}
+		
+		return index;
+	}
+	public static int buscarClientePorNombre(String nombre) {
+		int index = -1;
+		for(int i = 0; i<clientes.size();i++) {
+			if(clientes.get(i).getNombre().equalsIgnoreCase(nombre)) {
+				index = i;
+			}
+		}
+	
+	return index;
 	}
 	
 

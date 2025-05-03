@@ -178,6 +178,31 @@ public class VentanaClientes extends JFrame {
 		mnNewMenu.add(mntmNewMenuItem);
 		
 		JMenuItem mntmNewMenuItem_1 = new JMenuItem("Buscar");
+		mntmNewMenuItem_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String dni = textFieldnif.getText().trim();
+				String nombre = textFieldnombre.getText();
+				if(dni.isEmpty() && nombre.isEmpty()) {
+					JOptionPane.showMessageDialog(VentanaClientes.this, "Inserte Nombre o NIF","INSERTE DATOS PARA BUSQUEDA",JOptionPane.ERROR_MESSAGE);
+				}else {
+					int busqueda = principal.buscarClientePorDNI(dni);
+					if(busqueda == -1) {
+						busqueda = principal.buscarClientePorNombre(nombre);
+						System.out.println("Busqueda 2");
+					}
+					if(busqueda == -1) {
+						JOptionPane.showMessageDialog(VentanaClientes.this, "El cliente no esta en la base de datos","Cliente no encontrado",JOptionPane.ERROR_MESSAGE);
+					}else {
+						System.out.println("Encontrado");
+						System.out.println(nombre + " "+ dni);
+					}
+					
+					
+					
+				}
+				
+			}
+		});
 		mnNewMenu.add(mntmNewMenuItem_1);
 		
 		JMenuItem mntmNewMenuItem_2 = new JMenuItem("Añadir");
