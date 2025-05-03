@@ -40,6 +40,7 @@ public class VentanaClientes extends JFrame {
 	private JTextField textFieldCiudad;
 	private JTextField textFieldnombre;
 	private JTextField textFieldnif;
+	private JButton btnVehiculos;
 
 	/**
 	 * Launch the application.
@@ -147,10 +148,15 @@ public class VentanaClientes extends JFrame {
 		textFieldCiudad.setBounds(101, 148, 212, 20);
 		panel.add(textFieldCiudad);
 		
-		JButton btnNewButton_1 = new JButton("Mostrar Vehículos");
-		btnNewButton_1.setEnabled(false);
-		btnNewButton_1.setBounds(101, 179, 212, 23);
-		panel.add(btnNewButton_1);
+		btnVehiculos = new JButton("Mostrar Vehículos");
+		btnVehiculos.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+			}
+		});
+		btnVehiculos.setEnabled(false);
+		btnVehiculos.setBounds(101, 179, 212, 23);
+		panel.add(btnVehiculos);
 		
 		JMenuBar menuBar = new JMenuBar();
 		menuBar.setBounds(0, 0, 351, 22);
@@ -196,9 +202,52 @@ public class VentanaClientes extends JFrame {
 		mnNewMenu.add(mntmNewMenuItem_1);
 		
 		JMenuItem mntmNewMenuItem = new JMenuItem("Modificar");
+		mntmNewMenuItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int posi = principal.buscarClientePorDNI(textFieldnif.getText());
+				if(posi == -1) {
+					JOptionPane.showMessageDialog(VentanaClientes.this, "El NIF proporcionado no esta en la base de datos","NIF NO VALIDO",JOptionPane.ERROR_MESSAGE);
+				}else {
+					String nombre = textFieldnombre.getText();
+					String tel = textFieldtel.getText().trim();
+					String direc = textFielddire.getText();
+					String ciudad = textFieldCiudad.getText();
+					if(nombre.trim().isEmpty()||tel.isEmpty()|| direc.trim().isEmpty()|| ciudad.trim().isEmpty()) {
+						JOptionPane.showMessageDialog(VentanaClientes.this, "Los datos del clinete no pueden quedar vacios", "CAMPOS VACIOS", JOptionPane.ERROR_MESSAGE);
+					}else {
+						int respuesta = JOptionPane.showConfirmDialog(VentanaClientes.this, "Esta seguro de modificar este cliente","Modificar Clinete",JOptionPane.YES_NO_OPTION);
+						if(respuesta == JOptionPane.YES_OPTION) {
+							int telef = Integer.parseInt(tel);
+							Cliente c = principal.clientes.get(posi);
+							c.setNombre(nombre);
+							c.setTel(telef);
+							c.setDirec(direc);
+							c.setCiudad(ciudad);
+							JOptionPane.showMessageDialog(VentanaClientes.this, "El clinete se ha modificado correctamente", "CORRECTO", JOptionPane.INFORMATION_MESSAGE);
+						}
+					}
+				}
+			}
+		});
 		mnNewMenu.add(mntmNewMenuItem);
 		
 		JMenuItem mntmNewMenuItem_3 = new JMenuItem("Eliminar");
+		mntmNewMenuItem_3.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String dni = textFieldnif.getText().trim();
+				int posi = principal.buscarClientePorDNI(dni);
+				if(posi == -1) {
+					JOptionPane.showMessageDialog(VentanaClientes.this, "El NIF proporcionado no esta en la base de datos","NIF NO VALIDO",JOptionPane.ERROR_MESSAGE);
+				}else {
+					String mensaje = "Esta seguro que desa eliminar este cliente?\nTambien se elimnaran sus Vehiculos e Incidencias";
+					int respuesta = JOptionPane.showConfirmDialog(VentanaClientes.this, mensaje,"Eliminar Cliente",JOptionPane.YES_NO_OPTION);
+					if(respuesta == JOptionPane.YES_OPTION) {
+						principal.clientes.remove(posi);
+						vaciarCampos();
+					}
+				}
+			}
+		});
 		mnNewMenu.add(mntmNewMenuItem_3);
 		
 		JMenu mnNewMenu_2 = new JMenu("Ver Todos");
@@ -276,13 +325,9 @@ public class VentanaClientes extends JFrame {
 		textFieldnif.setText("");
 		textFieldnif.setEditable(true);
 		textFieldnombre.setText("");
-		textFieldnombre.setEditable(true);
 		textFieldtel.setText("");
-		textFieldtel.setEditable(true);
 		textFielddire.setText("");
-		textFielddire.setEditable(true);
 		textFieldCiudad.setText("");
-		textFieldCiudad.setEditable(true);
 	}
 	
 	public void rellenarCampos(int posi) {
@@ -291,10 +336,10 @@ public class VentanaClientes extends JFrame {
 			textFieldnif.setText(c.getNif());
 			textFieldnif.setEditable(false);
 			textFieldnombre.setText(c.getNombre());
-			textFieldnombre.setEditable(false);
 			textFieldtel.setText(""+c.getTel());
 			textFielddire.setText(c.getDirec());
 			textFieldCiudad.setText(c.getCiudad());
+			btnVehiculos.setEnabled(true);
 			
 		}
 	}
