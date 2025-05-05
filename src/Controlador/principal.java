@@ -12,6 +12,7 @@ import java.util.Comparator;
 
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 import Modelo.Cliente;
 import Modelo.Vehiculo;
@@ -117,6 +118,55 @@ public class principal {
 			bw.close();
 		}catch(Exception e) {
 			
+		}
+	}
+	
+	public static void cargarTextoPlano(String ruta) {
+		File f;
+		FileReader fr;
+		BufferedReader br;
+		Boolean correcto = false;
+		ArrayList<Cliente> clientes2 = new ArrayList<Cliente>();
+		try {
+			f = new File(ruta);
+			fr = new FileReader(f);
+			br = new BufferedReader(fr);
+			String leer = "";
+			int contadorcli = -1;
+			while((leer = br.readLine())!=null) {
+				String [] datos = leer.split("-");
+				if(datos[0].equalsIgnoreCase("Cliente")) {
+					String nif = datos[1];
+					String nombre = datos[2];
+					int tel = Integer.parseInt(datos[3]);
+					String direc = datos[4];
+					String ciudad = datos[5];
+					Cliente c = new Cliente(nif,nombre,tel,direc,ciudad);
+					clientes2.add(c);
+					contadorcli = contadorcli +1;
+				}else if(datos[0].equalsIgnoreCase("Vehiculo")) {
+					String matricula = datos[1];
+					String color = datos[2];
+					String modelo = datos[3];
+					int aniomatri = Integer.parseInt(datos[4]);
+					Vehiculo v = new Vehiculo(matricula,color,modelo,aniomatri);
+					clientes2.get(contadorcli).Vehiculos.add(v);
+				}
+				
+			}
+			fr.close();
+			br.close();
+			correcto = true;
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		if(correcto = true) {
+			clientes.clear();
+			clientes.addAll(clientes2);
+			JOptionPane.showMessageDialog(null, "Se ha cargado correctametne","DATOS CARGADOS",JOptionPane.INFORMATION_MESSAGE);
+		}else {
+			System.out.println("No cargado");
 		}
 	}
 	

@@ -7,6 +7,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import Controlador.principal;
+import Modelo.Cliente;
 
 import javax.swing.JToolBar;
 import javax.swing.ImageIcon;
@@ -14,6 +15,7 @@ import javax.swing.JButton;
 import java.awt.Color;
 import javax.swing.JLabel;
 import javax.swing.JMenuBar;
+import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import java.awt.Component;
 import java.awt.event.MouseAdapter;
@@ -106,6 +108,17 @@ public class Inicio extends JFrame {
 		panel.add(lblNewLabel);
 		
 		JButton btnNewButton = new JButton("Cargar");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String ruta = principal.obtenerRuta();
+				if(ruta == null){
+					System.out.println("Operación cancelada");
+				}else {
+					principal.cargarTextoPlano(ruta);
+					
+				}
+			}
+		});
 		btnNewButton.setBounds(23, 96, 89, 23);
 		panel.add(btnNewButton);
 		
@@ -114,9 +127,10 @@ public class Inicio extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				String ruta = principal.obtenerRuta();
 				if(ruta == null){
-					System.out.println("Ope cancel");
+					System.out.println("Operación cancelada");
 				}else {
 					principal.guardarTextoPlano(ruta);
+					
 				}
 			}
 		});

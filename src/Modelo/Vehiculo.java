@@ -4,11 +4,12 @@ public class Vehiculo {
 	private String matricula;
 	private String color;
 	private String modelo;
+	private int aniomatri;
 	@Override
 	public String toString() {
 		return "Vehiculo-" + matricula + "-" + color + "-" + modelo + "-"+ aniomatri;
 	}
-	private int aniomatri;
+	
 	public Vehiculo(String matricula, String color, String modelo, int aniomatri) {
 		super();
 		this.matricula = matricula;
