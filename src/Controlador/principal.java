@@ -24,6 +24,9 @@ import Vista.VentanaVehiculos;
 public class principal {
 	public static ArrayList<Cliente> clientes = new ArrayList<Cliente>();
 	public static ArrayList<JFrame> ventanas = new ArrayList<JFrame>();
+	public static String url = "jdbc:postgresql://localhost:5432/Mecatall";
+	public static String usuario = "postgres";
+	public static String contra = "postgres";
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
