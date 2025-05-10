@@ -16,9 +16,7 @@ import javax.swing.JOptionPane;
 
 import main.Modelo.Cliente;
 import main.Modelo.Vehiculo;
-import main.Vista.Inicio;
-import main.Vista.VentanaClientes;
-import main.Vista.VentanaVehiculos;
+import main.Vista.*;
 
 
 public class principal {
@@ -30,7 +28,8 @@ public class principal {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		ventanas.add(new Inicio());
+		
+		ventanas.add(new InicioSesion());
 		ventanas.get(0).setVisible(true);
 
 	}
@@ -50,6 +49,10 @@ public class principal {
 				ventanas.add(v);
 			}else if(nombre.equalsIgnoreCase("Vehiculos")) {
 				JFrame v = new VentanaVehiculos();
+				v.setVisible(visibilidad);
+				ventanas.add(v);
+			}else if(nombre.equalsIgnoreCase("Inicio")) {
+				JFrame v = new Inicio();
 				v.setVisible(visibilidad);
 				ventanas.add(v);
 			}

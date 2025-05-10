@@ -86,6 +86,8 @@ public class InicioSesion extends JFrame {
 					Connection conn = DriverManager.getConnection(principal.url, usuario, pasw);
 					if(conn != null) {
 						lblMensaje.setText("Conexión exitosa");
+						principal.mostrarVentana("Inicio", true);
+						setVisible(false);
 					}
 				}catch(SQLException error) {
 					lblMensaje.setText("Usuario o contraseña no valida");
