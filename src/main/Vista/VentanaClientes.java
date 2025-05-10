@@ -1,4 +1,4 @@
-package Vista;
+package main.Vista;
 
 import java.awt.EventQueue;
 
@@ -6,8 +6,8 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-import Controlador.principal;
-import Modelo.Cliente;
+import main.Controlador.principal;
+import main.Modelo.Cliente;
 
 import javax.swing.JLabel;
 import javax.swing.JButton;

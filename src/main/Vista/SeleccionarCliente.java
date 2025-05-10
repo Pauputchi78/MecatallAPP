@@ -1,4 +1,4 @@
-package Vista;
+package main.Vista;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
@@ -10,8 +10,8 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
-import Controlador.principal;
-import Modelo.Cliente;
+import main.Controlador.principal;
+import main.Modelo.Cliente;
 
 import javax.swing.JMenuBar;
 import javax.swing.JOptionPane;

@@ -1,4 +1,4 @@
-package Vista;
+package main.Vista;
 
 import java.awt.EventQueue;
 
@@ -6,9 +6,9 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-import Controlador.principal;
-import Modelo.Cliente;
-import Modelo.Vehiculo;
+import main.Controlador.principal;
+import main.Modelo.Cliente;
+import main.Modelo.Vehiculo;
 
 import javax.swing.JLabel;
 import javax.swing.JMenuBar;

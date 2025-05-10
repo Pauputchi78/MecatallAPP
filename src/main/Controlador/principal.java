@@ -1,4 +1,4 @@
-package Controlador;
+package main.Controlador;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -14,11 +14,11 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
-import Modelo.Cliente;
-import Modelo.Vehiculo;
-import Vista.Inicio;
-import Vista.VentanaClientes;
-import Vista.VentanaVehiculos;
+import main.Modelo.Cliente;
+import main.Modelo.Vehiculo;
+import main.Vista.Inicio;
+import main.Vista.VentanaClientes;
+import main.Vista.VentanaVehiculos;
 
 
 public class principal {

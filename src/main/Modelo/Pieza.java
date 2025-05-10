@@ -1,4 +1,4 @@
-package Modelo;
+package main.Modelo;
 
 public class Pieza {
 

@@ -1,4 +1,4 @@
-package Vista;
+package main.Vista;
 
 import java.awt.EventQueue;
 import java.awt.Label;
@@ -7,7 +7,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-import Controlador.principal;
+import main.Controlador.principal;
 
 import javax.swing.JLabel;
 import javax.swing.JTextField;
