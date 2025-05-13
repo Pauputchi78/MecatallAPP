@@ -6,6 +6,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import main.Controlador.conexionBDD;
 import main.Controlador.principal;
 import main.Modelo.Cliente;
 
@@ -66,6 +67,7 @@ public class VentanaClientes extends JFrame {
 			@Override
 			public void windowClosing(WindowEvent e) {
 				principal.mostrarVentana("Inicio", true);
+				
 			}
 			@Override
 			public void windowActivated(WindowEvent e) {
@@ -151,7 +153,7 @@ public class VentanaClientes extends JFrame {
 		btnVehiculos = new JButton("Mostrar Vehículos");
 		btnVehiculos.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+				conexionBDD.cargarVehiculos(principal.clientes.get(0));
 			}
 		});
 		btnVehiculos.setEnabled(false);
@@ -277,7 +279,7 @@ public class VentanaClientes extends JFrame {
 				if(dni.isEmpty()|| nombre.trim().isEmpty()||tel.isEmpty()|| direc.trim().isEmpty()|| ciudad.trim().isEmpty()) {
 					JOptionPane.showMessageDialog(VentanaClientes.this, "Es necesario rellenar todos los campos para insertar un cliente", "CAMPOS VACIOS", JOptionPane.ERROR_MESSAGE);
 				}else {
-					if(true == false) {//verificarDNI(dni)== false
+					if(verificarDNI(dni)== false) {
 						
 						textFieldnif.setForeground(Color.RED);
 					}else {

@@ -6,6 +6,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import main.Controlador.conexionBDD;
 import main.Controlador.principal;
 import main.Modelo.Cliente;
 import main.Modelo.Vehiculo;
@@ -24,6 +25,8 @@ import java.awt.event.WindowEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.JSpinner;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class VentanaVehiculos extends JFrame {
 
@@ -65,6 +68,7 @@ public class VentanaVehiculos extends JFrame {
 			@Override
 			public void windowActivated(WindowEvent e) {
 				principal.mostrarVentana("Inicio", false);
+				conexionBDD.cargarClinetesBDD();
 			}
 		});
 		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
@@ -137,6 +141,14 @@ public class VentanaVehiculos extends JFrame {
 		menuBar.add(mnNewMenu_3);
 		
 		textFieldNIF = new JTextField();
+		textFieldNIF.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent e) {
+				if(textFieldNIF.getText().length() >= 9) {
+					e.consume();
+				}
+			}
+		});
 		textFieldNIF.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				int posi = principal.buscarClientePorDNI(textFieldNIF.getText());

@@ -7,6 +7,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import main.Controlador.conexionBDD;
 import main.Controlador.principal;
 
 import javax.swing.JLabel;
@@ -47,7 +48,7 @@ public class InicioSesion extends JFrame {
 	 */
 	public InicioSesion() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 300);
+		setBounds(100, 100, 335, 300);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
@@ -55,26 +56,26 @@ public class InicioSesion extends JFrame {
 		contentPane.setLayout(null);
 		
 		JPanel panel = new JPanel();
-		panel.setBounds(10, 11, 284, 239);
+		panel.setBounds(10, 11, 299, 239);
 		contentPane.add(panel);
 		panel.setLayout(null);
 		
 		JLabel lblNewLabel = new JLabel("Usuario");
-		lblNewLabel.setBounds(33, 50, 65, 14);
+		lblNewLabel.setBounds(34, 73, 82, 14);
 		panel.add(lblNewLabel);
 		
 		JLabel lblContra = new JLabel("Contraseña");
-		lblContra.setBounds(33, 84, 65, 14);
+		lblContra.setBounds(34, 107, 82, 14);
 		panel.add(lblContra);
 		
 		txtUsuario = new JTextField();
-		txtUsuario.setBounds(120, 47, 117, 20);
+		txtUsuario.setBounds(141, 70, 117, 20);
 		panel.add(txtUsuario);
 		txtUsuario.setColumns(10);
 		
 		txtContra = new JTextField();
 		txtContra.setColumns(10);
-		txtContra.setBounds(120, 81, 117, 20);
+		txtContra.setBounds(141, 104, 117, 20);
 		panel.add(txtContra);
 		
 		JButton btnAceptar = new JButton("ACEPTAR");
@@ -83,7 +84,7 @@ public class InicioSesion extends JFrame {
 				String usuario = txtUsuario.getText();
 				String pasw = txtContra.getText();
 				try {
-					Connection conn = DriverManager.getConnection(principal.url, usuario, pasw);
+					Connection conn = DriverManager.getConnection(conexionBDD.url, usuario, pasw);
 					if(conn != null) {
 						lblMensaje.setText("Conexión exitosa");
 						principal.mostrarVentana("Inicio", true);
@@ -95,11 +96,12 @@ public class InicioSesion extends JFrame {
 						
 			}
 		});
-		btnAceptar.setBounds(95, 135, 89, 23);
+		btnAceptar.setBounds(96, 158, 89, 23);
 		panel.add(btnAceptar);
 		
-		lblMensaje = new JLabel("New label");
-		lblMensaje.setBounds(73, 193, 141, 14);
+		lblMensaje = new JLabel("");
+		lblMensaje.setVisible(false);
+		lblMensaje.setBounds(75, 192, 141, 14);
 		panel.add(lblMensaje);
 	}
 }

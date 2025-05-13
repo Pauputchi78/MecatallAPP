@@ -6,6 +6,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import main.Controlador.conexionBDD;
 import main.Controlador.principal;
 import main.Modelo.Cliente;
 
@@ -88,6 +89,7 @@ public class Inicio extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				principal.mostrarVentana("Clientes", true);
+				conexionBDD.cargarClinetesBDD();
 			}
 		});
 		
@@ -98,6 +100,7 @@ public class Inicio extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				principal.mostrarVentana("Vehiculos", true);
+				conexionBDD.cargarClinetesBDD();
 			}
 		});
 		menuBar.add(mnNewMenu_1);
