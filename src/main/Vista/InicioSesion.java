@@ -81,10 +81,10 @@ public class InicioSesion extends JFrame {
 		JButton btnAceptar = new JButton("ACEPTAR");
 		btnAceptar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				String usuario = txtUsuario.getText();
-				String pasw = txtContra.getText();
+				conexionBDD.usuario = txtUsuario.getText();
+				conexionBDD.contra = txtContra.getText();
 				try {
-					Connection conn = DriverManager.getConnection(conexionBDD.url, usuario, pasw);
+					Connection conn = DriverManager.getConnection(conexionBDD.url, conexionBDD.usuario, conexionBDD.contra);
 					if(conn != null) {
 						lblMensaje.setText("Conexión exitosa");
 						principal.mostrarVentana("Inicio", true);

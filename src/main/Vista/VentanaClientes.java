@@ -7,6 +7,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import main.Controlador.conexionBDD;
+import main.Controlador.gestorClases;
 import main.Controlador.principal;
 import main.Modelo.Cliente;
 
@@ -153,7 +154,7 @@ public class VentanaClientes extends JFrame {
 		btnVehiculos = new JButton("Mostrar Vehículos");
 		btnVehiculos.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				conexionBDD.cargarVehiculos(principal.clientes.get(0));
+				conexionBDD.cargarVehiculos(gestorClases.clientes.get(0));
 			}
 		});
 		btnVehiculos.setEnabled(false);
@@ -185,9 +186,9 @@ public class VentanaClientes extends JFrame {
 				if(dni.isEmpty() && nombre.isEmpty()) {
 					JOptionPane.showMessageDialog(VentanaClientes.this, "Inserte Nombre o NIF","INSERTE DATOS PARA BUSQUEDA",JOptionPane.ERROR_MESSAGE);
 				}else {
-					int busqueda = principal.buscarClientePorDNI(dni);
+					int busqueda = gestorClases.buscarClientePorDNI(dni);
 					if(busqueda == -1) {
-						busqueda = principal.buscarClientePorNombre(nombre);
+						busqueda = gestorClases.buscarClientePorNombre(nombre);
 					}
 					if(busqueda == -1) {
 						JOptionPane.showMessageDialog(VentanaClientes.this, "El cliente no esta en la base de datos","Cliente no encontrado",JOptionPane.ERROR_MESSAGE);
@@ -206,7 +207,7 @@ public class VentanaClientes extends JFrame {
 		JMenuItem mntmNewMenuItem = new JMenuItem("Modificar");
 		mntmNewMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				int posi = principal.buscarClientePorDNI(textFieldnif.getText());
+				int posi = gestorClases.buscarClientePorDNI(textFieldnif.getText());
 				if(posi == -1) {
 					JOptionPane.showMessageDialog(VentanaClientes.this, "El NIF proporcionado no esta en la base de datos","NIF NO VALIDO",JOptionPane.ERROR_MESSAGE);
 				}else {
@@ -220,7 +221,7 @@ public class VentanaClientes extends JFrame {
 						int respuesta = JOptionPane.showConfirmDialog(VentanaClientes.this, "Esta seguro de modificar este cliente","Modificar Clinete",JOptionPane.YES_NO_OPTION);
 						if(respuesta == JOptionPane.YES_OPTION) {
 							int telef = Integer.parseInt(tel);
-							Cliente c = principal.clientes.get(posi);
+							Cliente c = gestorClases.clientes.get(posi);
 							c.setNombre(nombre);
 							c.setTel(telef);
 							c.setDirec(direc);
@@ -237,14 +238,14 @@ public class VentanaClientes extends JFrame {
 		mntmNewMenuItem_3.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String dni = textFieldnif.getText().trim();
-				int posi = principal.buscarClientePorDNI(dni);
+				int posi = gestorClases.buscarClientePorDNI(dni);
 				if(posi == -1) {
 					JOptionPane.showMessageDialog(VentanaClientes.this, "El NIF proporcionado no esta en la base de datos","NIF NO VALIDO",JOptionPane.ERROR_MESSAGE);
 				}else {
 					String mensaje = "Esta seguro que desa eliminar este cliente?\nTambien se elimnaran sus Vehiculos e Incidencias";
 					int respuesta = JOptionPane.showConfirmDialog(VentanaClientes.this, mensaje,"Eliminar Cliente",JOptionPane.YES_NO_OPTION);
 					if(respuesta == JOptionPane.YES_OPTION) {
-						principal.clientes.remove(posi);
+						gestorClases.clientes.remove(posi);
 						vaciarCampos();
 					}
 				}
@@ -285,7 +286,7 @@ public class VentanaClientes extends JFrame {
 					}else {
 						int telefono = Integer.parseInt(tel);
 						Cliente p = new Cliente(dni, nombre, telefono, direc, ciudad);
-						principal.clientes.add(p);
+						gestorClases.clientes.add(p);
 						JOptionPane.showMessageDialog(VentanaClientes.this, "El clinete se ha insertado correctamente", "CORRECTO", JOptionPane.INFORMATION_MESSAGE);
 						vaciarCampos();
 					}
@@ -305,7 +306,7 @@ public class VentanaClientes extends JFrame {
 	}
 	
 	public boolean verificarDNI(String dni) {
-		for(Cliente c : principal.clientes) {
+		for(Cliente c : gestorClases.clientes) {
 			if(c.getNif().equalsIgnoreCase(dni)== true) {
 				JOptionPane.showMessageDialog(VentanaClientes.this, "El NIF "+ dni +" ya esta asignado a un cliente", "NIF NO VALIDO", JOptionPane.ERROR_MESSAGE);
 				return false;
@@ -345,8 +346,8 @@ public class VentanaClientes extends JFrame {
 	}
 	
 	public void rellenarCampos(int posi) {
-		if(posi>=0 && posi<principal.clientes.size()) {
-			Cliente c = principal.clientes.get(posi);
+		if(posi>=0 && posi<gestorClases.clientes.size()) {
+			Cliente c = gestorClases.clientes.get(posi);
 			textFieldnif.setText(c.getNif());
 			textFieldnif.setEditable(false);
 			textFieldnombre.setText(c.getNombre());

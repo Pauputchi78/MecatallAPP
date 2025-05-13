@@ -55,10 +55,10 @@ public class Cliente {
 				ve = ve+Vehiculos.get(i).toString() + "\n";
 			}
 			ve = ve+Vehiculos.get(Vehiculos.size()-1);
-			return "Cliente-"+nif + "-" + nombre + "-" + tel + "-" + direc + "-" + ciudad +"\n"+ve;
+			return "Cliente_"+nif + "_" + nombre + "_" + tel + "_" + direc + "_" + ciudad +"\n"+ve;
 		}
 		
-		return "Cliente-"+nif + "-" + nombre + "-" + tel + "-" + direc + "-" + ciudad;
+		return "Cliente_"+nif + "_" + nombre + "_" + tel + "_" + direc + "_" + ciudad;
 	} 
 	
 	

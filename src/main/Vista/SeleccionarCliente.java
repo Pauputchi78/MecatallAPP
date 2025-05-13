@@ -10,6 +10,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
+import main.Controlador.gestorClases;
 import main.Controlador.principal;
 import main.Modelo.Cliente;
 
@@ -100,8 +101,8 @@ public class SeleccionarCliente extends JDialog {
 	}
 	public void rellenarTabla() {
 		tmodel.setRowCount(0);
-		for(int i = 0; i<principal.clientes.size();i++) {
-			Cliente c = principal.clientes.get(i);
+		for(int i = 0; i<gestorClases.clientes.size();i++) {
+			Cliente c = gestorClases.clientes.get(i);
 			Object [] fila = {c.getNif(),c.getNombre(),c.getTel(),c.getDirec(),c.getCiudad()};
 			tmodel.addRow(fila);
 		}

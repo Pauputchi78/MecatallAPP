@@ -5,8 +5,10 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.text.DateFormatter;
 
 import main.Controlador.conexionBDD;
+import main.Controlador.gestorClases;
 import main.Controlador.principal;
 import main.Modelo.Cliente;
 import main.Modelo.Vehiculo;
@@ -18,10 +20,16 @@ import javax.swing.JMenu;
 import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.JButton;
+import javax.swing.JFormattedTextField;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.text.DateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.JSpinner;
@@ -37,7 +45,7 @@ public class VentanaVehiculos extends JFrame {
 	private JTextField textFieldMatricula;
 	private JTextField textFieldModelo;
 	private JTextField textFieldColor;
-	private JSpinner spinnerAnio;
+	private JTextField textFieldfecha;
 
 	/**
 	 * Launch the application.
@@ -68,7 +76,6 @@ public class VentanaVehiculos extends JFrame {
 			@Override
 			public void windowActivated(WindowEvent e) {
 				principal.mostrarVentana("Inicio", false);
-				conexionBDD.cargarClinetesBDD();
 			}
 		});
 		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
@@ -110,24 +117,39 @@ public class VentanaVehiculos extends JFrame {
 		mnNewMenu_1.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				int posi = principal.buscarClientePorDNI(textFieldNIF.getText());
+				int posi = gestorClases.buscarClientePorDNI(textFieldNIF.getText());
 				if(posi != -1) {
 					String matricula = textFieldMatricula.getText();
 					String modelo = textFieldModelo.getText();
 					String color = textFieldColor.getText();
-					int aniomatri = (Integer) spinnerAnio.getValue();
-					if(matricula.isEmpty() || modelo.isEmpty()|| color.isEmpty()) {
+					String fechamatri = textFieldfecha.getText().trim();
+					LocalDate fecham = null;
+					if(matricula.isEmpty() || modelo.isEmpty()|| color.isEmpty()|| fechamatri.isEmpty()) {
 						JOptionPane.showMessageDialog(VentanaVehiculos.this, "Rellene todos los campos", "CAMPOS  VACIOS",JOptionPane.ERROR_MESSAGE);
 					}else {
-						if(principal.validarMatricula(matricula)) {
-							Cliente c = principal.clientes.get(posi);
-							Vehiculo v = new Vehiculo(matricula,color,modelo,aniomatri);
-							c.Vehiculos.add(v);
-							JOptionPane.showMessageDialog(VentanaVehiculos.this, "El vehiculo ha sido insertado correctamente", "Vehiculo Insertado",JOptionPane.INFORMATION_MESSAGE);
-							vaciarCampos();
+						boolean correcto = false;
+						try {
+				            fecham = LocalDate.parse(fechamatri); 
+				            correcto = true;
+				        } catch (DateTimeParseException error) {
+				            correcto = false;
+				        }
+						if(correcto == true) {
+							if(conexionBDD.comprobarMatricula(matricula) == false) {
+								Cliente c = gestorClases.clientes.get(posi);
+								Vehiculo v = new Vehiculo(matricula,color,modelo,fecham);
+								c.Vehiculos.add(v);
+								conexionBDD.insertarVehiculo(v, c.getNif());
+								JOptionPane.showMessageDialog(VentanaVehiculos.this, "El vehiculo ha sido insertado correctamente", "Vehiculo Insertado",JOptionPane.INFORMATION_MESSAGE);
+								vaciarCampos();
+							}else {
+								JOptionPane.showMessageDialog(VentanaVehiculos.this, "La matricula ya esta asignada a una clinete", "Matricula Registrada",JOptionPane.ERROR_MESSAGE);
+							}
 						}else {
-							JOptionPane.showMessageDialog(VentanaVehiculos.this, "La matricula ya esta asignada a una clinete", "Matricula Registrada",JOptionPane.ERROR_MESSAGE);
+							System.out.println("Fecha no valida");
 						}
+						
+						
 					}
 				}else {
 					JOptionPane.showMessageDialog(VentanaVehiculos.this,"No se ha encontrado el NIF "+ textFieldNIF.getText(),"NO ENCONTRADO",JOptionPane.ERROR_MESSAGE);
@@ -151,9 +173,9 @@ public class VentanaVehiculos extends JFrame {
 		});
 		textFieldNIF.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				int posi = principal.buscarClientePorDNI(textFieldNIF.getText());
+				int posi = gestorClases.buscarClientePorDNI(textFieldNIF.getText());
 				if(posi != -1) {
-					Cliente c = principal.clientes.get(posi);
+					Cliente c = gestorClases.clientes.get(posi);
 					textFieldNIF.setText(c.getNif());
 					textFieldNom.setText(c.getNombre());
 				}else {
@@ -178,7 +200,7 @@ public class VentanaVehiculos extends JFrame {
 				sc.setVisible(true);
 				int clisele = sc.selectCli();
 				if(clisele != -1) {
-					Cliente c = principal.clientes.get(clisele);
+					Cliente c = gestorClases.clientes.get(clisele);
 					textFieldNIF.setText(c.getNif());
 					textFieldNom.setText(c.getNombre());
 				}
@@ -192,6 +214,15 @@ public class VentanaVehiculos extends JFrame {
 		panel.add(lblNewLabel_1);
 		
 		textFieldMatricula = new JTextField();
+		textFieldMatricula.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent e) {
+				String texto = textFieldMatricula.getText();
+				if(texto.length() >=7) {
+					e.consume();
+				}
+			}
+		});
 		textFieldMatricula.setColumns(10);
 		textFieldMatricula.setBounds(192, 100, 124, 20);
 		panel.add(textFieldMatricula);
@@ -218,10 +249,37 @@ public class VentanaVehiculos extends JFrame {
 		lblNewLabel_1_1_1_1.setBounds(144, 185, 133, 14);
 		panel.add(lblNewLabel_1_1_1_1);
 		
-		SpinnerNumberModel spinermodel = new SpinnerNumberModel(2010,1950,2025,1);
-		spinnerAnio = new JSpinner(spinermodel);
-		spinnerAnio.setBounds(164, 210, 77, 20);
-		panel.add(spinnerAnio);
+		textFieldfecha = new JTextField();
+		textFieldfecha.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent e) {
+				char c = e.getKeyChar();
+			    String fecha = textFieldfecha.getText();
+
+			    if (Character.isDigit(c) == false && c != '-') {
+			        e.consume();
+			        return;
+			    }
+
+			    if (textFieldfecha.getText().length() > 9) {
+			        e.consume();
+			        return;
+			    }
+
+			    if (Character.isDigit(c)) {
+			        if (textFieldfecha.getText().length() == 3 || textFieldfecha.getText().length() == 6) {
+			            textFieldfecha.setText(fecha + c + "-");
+			            e.consume();
+			        }
+			    }
+			}
+		});
+		textFieldfecha.setBounds(154, 210, 86, 20);
+		panel.add(textFieldfecha);
+		textFieldfecha.setColumns(10);
+		
+		
+		
 	}
 	
 	public void vaciarCampos() {
@@ -230,6 +288,7 @@ public class VentanaVehiculos extends JFrame {
 		textFieldMatricula.setText("");
 		textFieldModelo.setText("");
 		textFieldColor.setText("");
+		textFieldfecha.setText("");
 	}
 	
 }

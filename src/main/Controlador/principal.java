@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.nio.file.Files;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -20,8 +21,9 @@ import main.Vista.*;
 
 
 public class principal {
-	public static ArrayList<Cliente> clientes = new ArrayList<Cliente>();
+	
 	public static ArrayList<JFrame> ventanas = new ArrayList<JFrame>();
+	
 	
 
 	public static void main(String[] args) {
@@ -57,41 +59,6 @@ public class principal {
 		}
 	}
 	
-	public static int buscarClientePorDNI(String dni) {
-		int index = -1;
-			for(int i = 0; i<clientes.size();i++) {
-				if(clientes.get(i).getNif().equalsIgnoreCase(dni)) {
-					index = i;
-				}
-			}
-		
-		return index;
-	}
-	public static int buscarClientePorNombre(String nombre) {
-		int index = -1;
-		for(int i = 0; i<clientes.size();i++) {
-			if(clientes.get(i).getNombre().equalsIgnoreCase(nombre)) {
-				index = i;
-			}
-		}
-	
-	return index;
-	}
-	
-	public static boolean validarMatricula(String matricula) {
-		for(int i = 0;i<clientes.size();i++) {
-			Cliente c = clientes.get(i);
-			for(int j = 0; j<c.Vehiculos.size();j++) {
-				Vehiculo v = c.Vehiculos.get(j);
-				if(matricula.equalsIgnoreCase(v.getMatricula())) {
-					return false;
-				}
-			}
-		}
-		
-		return true;
-	}
-	
 	public static String obtenerRuta() {
 		File f = new File(System.getProperty("user.home")+File.separator+"Desktop");
 		JFileChooser j = new JFileChooser(f);
@@ -114,7 +81,7 @@ public class principal {
 			f = new File(ruta);
 			fw = new FileWriter(f);
 			bw = new BufferedWriter(fw);
-			for(Cliente c : clientes) {
+			for(Cliente c : gestorClases.clientes) {
 				bw.write(c.toString());
 				bw.newLine();
 			}
@@ -138,7 +105,7 @@ public class principal {
 			String leer = "";
 			int contadorcli = -1;
 			while((leer = br.readLine())!=null) {
-				String [] datos = leer.split("-");
+				String [] datos = leer.split("_");
 				if(datos[0].equalsIgnoreCase("Cliente")) {
 					String nif = datos[1];
 					String nombre = datos[2];
@@ -152,7 +119,7 @@ public class principal {
 					String matricula = datos[1];
 					String color = datos[2];
 					String modelo = datos[3];
-					int aniomatri = Integer.parseInt(datos[4]);
+					LocalDate aniomatri = LocalDate.parse(datos[4]);
 					Vehiculo v = new Vehiculo(matricula,color,modelo,aniomatri);
 					clientes2.get(contadorcli).Vehiculos.add(v);
 				}
@@ -166,8 +133,8 @@ public class principal {
 		}
 		
 		if(correcto = true) {
-			clientes.clear();
-			clientes.addAll(clientes2);
+			gestorClases.clientes.clear();
+			gestorClases.clientes.addAll(clientes2);
 			JOptionPane.showMessageDialog(null, "Se ha cargado correctametne","DATOS CARGADOS",JOptionPane.INFORMATION_MESSAGE);
 		}else {
 			System.out.println("No cargado");

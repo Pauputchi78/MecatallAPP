@@ -7,6 +7,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import main.Controlador.conexionBDD;
+import main.Controlador.gestorClases;
 import main.Controlador.principal;
 import main.Modelo.Cliente;
 
@@ -89,7 +90,10 @@ public class Inicio extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				principal.mostrarVentana("Clientes", true);
-				conexionBDD.cargarClinetesBDD();
+				if(gestorClases.clientescargados == false) {
+					conexionBDD.cargarClinetesBDD();
+					gestorClases.clientescargados = true;
+				}
 			}
 		});
 		
@@ -100,7 +104,11 @@ public class Inicio extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				principal.mostrarVentana("Vehiculos", true);
-				conexionBDD.cargarClinetesBDD();
+				if(gestorClases.clientescargados == false) {
+					conexionBDD.cargarClinetesBDD();
+					gestorClases.clientescargados = true;
+				}
+				
 			}
 		});
 		menuBar.add(mnNewMenu_1);
