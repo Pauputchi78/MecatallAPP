@@ -2,6 +2,7 @@ package main.Controlador;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -48,6 +49,41 @@ public class conexionBDD {
 		}
 	}
 	
+	public static boolean insertarCliente(Cliente c) {
+		boolean correcto = false;
+		String nif = c.getNif();
+		String nombre = c.getNombre();
+		int telefono = c.getTel();
+		String direc = c.getDirec();
+		String ciudad = c.getCiudad();
+		Connection conn;
+		try {
+			PreparedStatement sentencia = null;
+			conn = DriverManager.getConnection(url, usuario, contra);
+			String consulta = "INSERT INTO CLIENTE VALUES(?,?,?,?,?)";
+			if(conn != null) {
+				sentencia = conn.prepareStatement(consulta);
+				sentencia.setString(1, nif);
+				sentencia.setString(2, nombre);
+				sentencia.setInt(3, telefono);
+				sentencia.setString(4, direc);
+				sentencia.setString(5, ciudad);
+				int filasinsert = sentencia.executeUpdate();
+				if(filasinsert >0) {
+					correcto = true;
+				}
+			}else {
+				System.out.println("Error conex");
+			}
+			conn.close();
+		}catch(SQLException e) {
+			e.printStackTrace();
+			correcto = false;
+		}
+		return correcto;
+		
+	}
+	
 	public static void cargarVehiculos(Cliente c) {
 		String nif = c.getNif();
 		Connection conn;
@@ -59,7 +95,6 @@ public class conexionBDD {
 			if(conn != null) {
 				sentencia = conn.createStatement();
 				String consulta= "Select * FROM VEHICULO WHERE nif_cliente = '"+nif+"'";
-				System.out.println("Sentencia creada");
 				respuesta = sentencia.executeQuery(consulta);
 				while(respuesta.next()) {
 					String matricula = respuesta.getString(1);
@@ -69,78 +104,73 @@ public class conexionBDD {
 					LocalDate fmatri = LocalDate.parse(anio);
 					Vehiculo v = new Vehiculo(matricula, color, modelo, fmatri);
 					c.Vehiculos.add(v);
-					System.out.println(v.toString());
 				}
-				System.out.println("Fin vehiculos");
 			}else {
 				System.out.println("Error conex");
 			}
-			conn.close();
-			
-			
-			
+			conn.close();	
 		}catch(SQLException e) {
-			
+			e.printStackTrace();
 		}
 		
 	}
 	
 	public static boolean insertarVehiculo(Vehiculo v , String nif) {
 		boolean correcto = false;
-		String matricula = v.getMatricula();
-		String color = v.getColor();
-		String modelo = v.getModelo();
-		String aniomatri = v.getAniomatri().toString();
-		String valores = "('"+matricula+"','"+color+"','"+modelo+"','"+aniomatri+"','"+nif+"')";
 		Connection conn;
+		String consulta= "INSERT INTO VEHICULO VALUES (?,?,?,?,?)";
+		java.sql.Date fechasql = java.sql.Date.valueOf(v.getAniomatri());
 		try {
 			
-			Statement sentencia = null;
+			PreparedStatement sentencia = null;
 			conn = DriverManager.getConnection(url, usuario, contra);
 			if(conn != null) {
-				sentencia = conn.createStatement();
-				String consulta= "INSERT INTO VEHICULO VALUES "+valores;
-				System.out.println("Sentencia creada");
-				ResultSet respuesta = sentencia.executeQuery(consulta);
-				correcto = true;
+				sentencia = conn.prepareStatement(consulta);
+				sentencia.setString(1, v.getMatricula());
+				sentencia.setString(2, v.getColor());
+				sentencia.setString(3, v.getModelo());
+				sentencia.setDate(4, fechasql);
+				sentencia.setString(5, nif);
+				int filasafect = sentencia.executeUpdate();
+				if(filasafect > 0) {
+					correcto = true;
+				}
 			}else {
 				System.out.println("Error conex");
 			}
 			conn.close();
-			
-			
-			
 		}catch(SQLException e) {
 			e.printStackTrace();
+			correcto = false;
 		}  
 		return correcto;
 	}
 	
 	public static boolean comprobarMatricula(String matricula) {
+		boolean correcto = false;
 		Connection conn;
 		try {
-			
 			Statement sentencia = null;
 			ResultSet respuesta = null;
 			conn = DriverManager.getConnection(url, usuario, contra);
 			if(conn != null) {
 				sentencia = conn.createStatement();
 				String consulta= "Select * FROM VEHICULO WHERE matricula = '"+matricula+"'";
-				System.out.println("Sentencia creada");
 				respuesta = sentencia.executeQuery(consulta);
-				return respuesta.next();
+				correcto = respuesta.next();
 				
 			}else {
 				System.out.println("Error conex");
 			}
 			conn.close();
-			
+			return correcto;
 			
 			
 		}catch(SQLException e) {
-			
+			e.printStackTrace();
+			correcto = false;
 		}
-		return false;
+		return correcto;
 	}
 
 }

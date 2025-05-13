@@ -154,7 +154,14 @@ public class VentanaClientes extends JFrame {
 		btnVehiculos = new JButton("Mostrar Vehículos");
 		btnVehiculos.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				conexionBDD.cargarVehiculos(gestorClases.clientes.get(0));
+				int cliente = gestorClases.buscarClientePorDNI(textFieldnif.getText());
+				gestorClases.clientes.get(cliente).Vehiculos.clear();
+				conexionBDD.cargarVehiculos(gestorClases.clientes.get(cliente));
+				if(gestorClases.clientes.get(cliente).Vehiculos.isEmpty() == false) {
+					System.out.println(gestorClases.clientes.get(cliente).toString());
+				}else {
+					JOptionPane.showMessageDialog(VentanaClientes.this, "El cliente no dispone de vehiculos", "SIN VEHICULOS",JOptionPane.ERROR_MESSAGE);
+				}
 			}
 		});
 		btnVehiculos.setEnabled(false);
@@ -281,14 +288,18 @@ public class VentanaClientes extends JFrame {
 					JOptionPane.showMessageDialog(VentanaClientes.this, "Es necesario rellenar todos los campos para insertar un cliente", "CAMPOS VACIOS", JOptionPane.ERROR_MESSAGE);
 				}else {
 					if(verificarDNI(dni)== false) {
-						
 						textFieldnif.setForeground(Color.RED);
 					}else {
 						int telefono = Integer.parseInt(tel);
 						Cliente p = new Cliente(dni, nombre, telefono, direc, ciudad);
-						gestorClases.clientes.add(p);
-						JOptionPane.showMessageDialog(VentanaClientes.this, "El clinete se ha insertado correctamente", "CORRECTO", JOptionPane.INFORMATION_MESSAGE);
-						vaciarCampos();
+						if(conexionBDD.insertarCliente(p)) {
+							gestorClases.clientes.add(p);
+							JOptionPane.showMessageDialog(VentanaClientes.this, "El clinete se ha insertado correctamente", "CORRECTO", JOptionPane.INFORMATION_MESSAGE);
+							vaciarCampos();
+						}else {
+							System.out.println("Error en inserción");
+						}
+						
 					}
 				}
 			}
@@ -343,6 +354,7 @@ public class VentanaClientes extends JFrame {
 		textFieldtel.setText("");
 		textFielddire.setText("");
 		textFieldCiudad.setText("");
+		btnVehiculos.setEnabled(false);
 	}
 	
 	public void rellenarCampos(int posi) {

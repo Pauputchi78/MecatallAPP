@@ -146,7 +146,7 @@ public class VentanaVehiculos extends JFrame {
 								JOptionPane.showMessageDialog(VentanaVehiculos.this, "La matricula ya esta asignada a una clinete", "Matricula Registrada",JOptionPane.ERROR_MESSAGE);
 							}
 						}else {
-							System.out.println("Fecha no valida");
+							JOptionPane.showMessageDialog(VentanaVehiculos.this, "La fecha insertada no es valida", "FECHA NO VALIDA",JOptionPane.ERROR_MESSAGE);
 						}
 						
 						

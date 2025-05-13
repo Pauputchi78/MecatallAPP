@@ -3,6 +3,7 @@ package main.Controlador;
 import java.util.ArrayList;
 
 import main.Modelo.Cliente;
+import main.Modelo.Vehiculo;
 
 public class gestorClases {
 	public static ArrayList<Cliente> clientes = new ArrayList<Cliente>();
@@ -28,5 +29,6 @@ public class gestorClases {
 	
 	return index;
 	}
+	
 
 }
