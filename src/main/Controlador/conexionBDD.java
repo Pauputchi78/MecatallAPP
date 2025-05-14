@@ -173,5 +173,105 @@ public class conexionBDD {
 		}
 		return correcto;
 	}
+	
+	public static boolean eliminarVehiculoMatricula(String matricula) {
+		boolean correcto = false;
+		Connection conn;
+		try {
+			String consulta = "DELETE FROM VEHICULO WHERE matricula = ?";
+			PreparedStatement sentencia = null;
+			ResultSet respuesta = null;
+			conn = DriverManager.getConnection(url, usuario, contra);
+			if(conn != null) {
+				sentencia = conn.prepareStatement(consulta);
+				sentencia.setString(1, matricula);
+				int fila = sentencia.executeUpdate();
+				if(fila > 0) {
+					correcto = true;
+				}
+			}else {
+				System.out.println("Error conex");
+			}
+			conn.close();	
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}
+		return correcto;
+	}
+	public static boolean eliminarVehiculosCliente(String nif) {
+		boolean correcto = false;
+		Connection conn;
+		try {
+			String consulta = "DELETE FROM VEHICULO WHERE nif_cliente = ?";
+			PreparedStatement sentencia = null;
+			conn = DriverManager.getConnection(url, usuario, contra);
+			if(conn != null) {
+				sentencia = conn.prepareStatement(consulta);
+				sentencia.setString(1, nif);
+				int fila = sentencia.executeUpdate();
+				if(fila > 0) {
+					correcto = true;
+				}
+			}else {
+				System.out.println("Error conex");
+			}
+			conn.close();	
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}
+		return correcto;
+	}
+	
+	public static boolean eliminarCliente(String nif) {
+		boolean correcto = false;
+		Connection conn;
+		try {
+			String consulta = "DELETE FROM CLIENTE WHERE nif = ?";
+			PreparedStatement sentencia = null;
+			conn = DriverManager.getConnection(url, usuario, contra);
+			if(conn != null) {
+				sentencia = conn.prepareStatement(consulta);
+				sentencia.setString(1, nif);
+				int fila = sentencia.executeUpdate();
+				if(fila > 0) {
+					correcto = true;
+				}
+			}else {
+				System.out.println("Error conex");
+			}
+			conn.close();	
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}
+		return correcto;
+	}
+	
+	public static boolean modificarCliente(Cliente c) {
+		boolean correcto = false;
+		Connection conn;
+		try {
+			String consulta = "UPDATE CLIENTE SET nombre = ?, telefono = ?, direccion = ?, ciudad = ? WHERE nif = ?";
+			PreparedStatement sentencia = null;
+			conn = DriverManager.getConnection(url, usuario, contra);
+			if(conn != null) {
+				sentencia = conn.prepareStatement(consulta);
+				sentencia.setString(1, c.getNombre());
+				sentencia.setInt(2, c.getTel());
+				sentencia.setString(3, c.getDirec());
+				sentencia.setString(4, c.getCiudad());
+				sentencia.setString(5, c.getNif());
+				int fila = sentencia.executeUpdate();
+				if(fila > 0) {
+					correcto = true;
+				}
+			}else {
+				System.out.println("Error conex");
+			}
+			conn.close();	
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}
+		return correcto;
+	}
 
 }

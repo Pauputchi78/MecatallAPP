@@ -230,12 +230,19 @@ public class VentanaClientes extends JFrame {
 						int respuesta = JOptionPane.showConfirmDialog(VentanaClientes.this, "Esta seguro de modificar este cliente","Modificar Clinete",JOptionPane.YES_NO_OPTION);
 						if(respuesta == JOptionPane.YES_OPTION) {
 							int telef = Integer.parseInt(tel);
-							Cliente c = gestorClases.clientes.get(posi);
-							c.setNombre(nombre);
-							c.setTel(telef);
-							c.setDirec(direc);
-							c.setCiudad(ciudad);
-							JOptionPane.showMessageDialog(VentanaClientes.this, "El cliente se ha modificado correctamente", "CORRECTO", JOptionPane.INFORMATION_MESSAGE);
+							Cliente cm = new Cliente(textFieldnif.getText(),nombre,telef,direc,ciudad);
+							boolean modificado = conexionBDD.modificarCliente(cm);
+							if(modificado == true) {
+								Cliente c = gestorClases.clientes.get(posi);
+								c.setNombre(nombre);
+								c.setTel(telef);
+								c.setDirec(direc);
+								c.setCiudad(ciudad);
+								JOptionPane.showMessageDialog(VentanaClientes.this, "El cliente se ha modificado correctamente", "CORRECTO", JOptionPane.INFORMATION_MESSAGE);
+							}else {
+								JOptionPane.showMessageDialog(VentanaClientes.this, "No se ha podido modificar el cliente", "ERROR AL MODIFICAR", JOptionPane.ERROR_MESSAGE);
+							}
+							
 						}
 					}
 				}
@@ -254,8 +261,18 @@ public class VentanaClientes extends JFrame {
 					String mensaje = "Esta seguro que desa eliminar este cliente?\nTambien se elimnaran sus Vehiculos e Incidencias";
 					int respuesta = JOptionPane.showConfirmDialog(VentanaClientes.this, mensaje,"Eliminar Cliente",JOptionPane.YES_NO_OPTION);
 					if(respuesta == JOptionPane.YES_OPTION) {
-						gestorClases.clientes.remove(posi);
-						vaciarCampos();
+						Cliente c = gestorClases.clientes.get(posi);
+						conexionBDD.eliminarVehiculosCliente(c.getNif());
+						c.Vehiculos.clear();
+						boolean correcto = conexionBDD.eliminarCliente(c.getNif());
+						if(correcto == true) {
+							gestorClases.clientes.remove(posi);
+							vaciarCampos();
+							JOptionPane.showMessageDialog(VentanaClientes.this, "Cliente eliminado con exito","ELIMINADO",JOptionPane.INFORMATION_MESSAGE);
+						}else {
+							JOptionPane.showMessageDialog(VentanaClientes.this, "Error al eliminar el cliente","ERROR AL ELIMINAR",JOptionPane.ERROR_MESSAGE);
+						}
+						
 					}
 				}
 			}
@@ -296,7 +313,7 @@ public class VentanaClientes extends JFrame {
 						Cliente p = new Cliente(dni, nombre, telefono, direc, ciudad);
 						if(conexionBDD.insertarCliente(p)) {
 							gestorClases.clientes.add(p);
-							JOptionPane.showMessageDialog(VentanaClientes.this, "El clinete se ha insertado correctamente", "CORRECTO", JOptionPane.INFORMATION_MESSAGE);
+							JOptionPane.showMessageDialog(VentanaClientes.this, "El cliente se ha insertado correctamente", "CORRECTO", JOptionPane.INFORMATION_MESSAGE);
 							vaciarCampos();
 						}else {
 							System.out.println("Error en inserción");
