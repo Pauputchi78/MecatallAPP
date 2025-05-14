@@ -160,6 +160,13 @@ public class VentanaVehiculos extends JFrame {
 		menuBar.add(mnNewMenu_1);
 		
 		JMenu mnNewMenu_3 = new JMenu("Mostrar Vehiculos");
+		mnNewMenu_3.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				MostrarVehiculos v = new MostrarVehiculos(VentanaVehiculos.this, null);
+				v.setVisible(true);
+			}
+		});
 		menuBar.add(mnNewMenu_3);
 		
 		textFieldNIF = new JTextField();

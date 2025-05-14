@@ -96,6 +96,7 @@ public class conexionBDD {
 				sentencia = conn.createStatement();
 				String consulta= "Select * FROM VEHICULO WHERE nif_cliente = '"+nif+"'";
 				respuesta = sentencia.executeQuery(consulta);
+				c.Vehiculos.clear();
 				while(respuesta.next()) {
 					String matricula = respuesta.getString(1);
 					String color = respuesta.getString(2);

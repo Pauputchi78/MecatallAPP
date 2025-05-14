@@ -10,9 +10,11 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
+import main.Controlador.conexionBDD;
 import main.Controlador.gestorClases;
 import main.Controlador.principal;
 import main.Modelo.Cliente;
+import main.Modelo.Vehiculo;
 
 import javax.swing.JMenuBar;
 import javax.swing.JOptionPane;
@@ -20,6 +22,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.ArrayList;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
@@ -34,10 +37,12 @@ public class SeleccionarCliente extends JDialog {
 
 	public SeleccionarCliente(JFrame padre) {
 		super(padre, true);
+	
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowActivated(WindowEvent e) {
-				rellenarTabla();
+				rellenarTablaconClientes();
+				
 			}
 			@Override
 			public void windowClosing(WindowEvent e) {
@@ -54,8 +59,8 @@ public class SeleccionarCliente extends JDialog {
 		scrollPane.setBounds(0, 0, 710, 314);
 		contentPanel.add(scrollPane);
 		
-		String [] columnas = {"NIF","NOMBRE","TELEFONO","DIRECCIÓN","CIUDAD"};
-		tmodel = new DefaultTableModel(columnas,0) {
+		String [] titulo = {"NIF","NOMBRE","TELEFONO","DIRECCIÓN","CIUDAD"};
+		tmodel = new DefaultTableModel(titulo,0) {
 			@Override
 			public boolean isCellEditable(int row, int column) {
 				return false;
@@ -99,7 +104,9 @@ public class SeleccionarCliente extends JDialog {
 			}
 		}
 	}
-	public void rellenarTabla() {
+
+	public void rellenarTablaconClientes() {
+		
 		tmodel.setRowCount(0);
 		for(int i = 0; i<gestorClases.clientes.size();i++) {
 			Cliente c = gestorClases.clientes.get(i);

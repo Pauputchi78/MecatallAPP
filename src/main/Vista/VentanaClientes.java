@@ -155,10 +155,12 @@ public class VentanaClientes extends JFrame {
 		btnVehiculos.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				int cliente = gestorClases.buscarClientePorDNI(textFieldnif.getText());
-				gestorClases.clientes.get(cliente).Vehiculos.clear();
-				conexionBDD.cargarVehiculos(gestorClases.clientes.get(cliente));
-				if(gestorClases.clientes.get(cliente).Vehiculos.isEmpty() == false) {
-					System.out.println(gestorClases.clientes.get(cliente).toString());
+				Cliente c = gestorClases.clientes.get(cliente);
+				c.Vehiculos.clear();
+				conexionBDD.cargarVehiculos(c);
+				if(c.Vehiculos.isEmpty() == false) {
+					MostrarVehiculos v = new MostrarVehiculos(VentanaClientes.this, c);
+					v.setVisible(true);
 				}else {
 					JOptionPane.showMessageDialog(VentanaClientes.this, "El cliente no dispone de vehiculos", "SIN VEHICULOS",JOptionPane.ERROR_MESSAGE);
 				}
