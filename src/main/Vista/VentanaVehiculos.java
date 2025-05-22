@@ -67,7 +67,9 @@ public class VentanaVehiculos extends JFrame {
 	 * Create the frame.
 	 */
 	public VentanaVehiculos() {
+		setResizable(false);
 		setTitle("Vehiculos");
+		setIconImage(principal.logoMecatall(65, 65).getImage());
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
@@ -137,9 +139,9 @@ public class VentanaVehiculos extends JFrame {
 						if(correcto == true) {
 							if(conexionBDD.comprobarMatricula(matricula) == false) {
 								Cliente c = gestorClases.clientes.get(posi);
-								Vehiculo v = new Vehiculo(matricula,color,modelo,fecham);
+								Vehiculo v = new Vehiculo(matricula,color,modelo,fecham,c.getNif());
 								c.Vehiculos.add(v);
-								conexionBDD.insertarVehiculo(v, c.getNif());
+								conexionBDD.insertarVehiculo(v);
 								JOptionPane.showMessageDialog(VentanaVehiculos.this, "El vehiculo ha sido insertado correctamente", "Vehiculo Insertado",JOptionPane.INFORMATION_MESSAGE);
 								vaciarCampos();
 							}else {

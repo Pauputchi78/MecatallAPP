@@ -10,6 +10,7 @@ import javax.swing.table.DefaultTableModel;
 
 import main.Controlador.conexionBDD;
 import main.Controlador.gestorClases;
+import main.Controlador.principal;
 import main.Modelo.Cliente;
 import main.Modelo.Vehiculo;
 
@@ -34,6 +35,9 @@ public class MostrarVehiculos extends JFrame {
 
 
 	public MostrarVehiculos(JFrame padre , Cliente c) {
+		setResizable(false);
+		setTitle("Mostrar Vehiculos");
+		setIconImage(principal.logoMecatall(65, 65).getImage());
 		String [] titulo = {"MATRICULA","COLOR","MODELO","AÑO MATRICULACIÓN","NIF CLINETE"};
 		tmodel = new DefaultTableModel(titulo,0) {
 			@Override
@@ -60,7 +64,7 @@ public class MostrarVehiculos extends JFrame {
 		
 		
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 450, 300);
+		setBounds(100, 100, 689, 370);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
@@ -68,17 +72,18 @@ public class MostrarVehiculos extends JFrame {
 		contentPane.setLayout(null);
 		
 		JPanel panel = new JPanel();
-		panel.setBounds(10, 11, 414, 239);
+		panel.setBounds(10, 11, 653, 309);
 		contentPane.add(panel);
 		panel.setLayout(null);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(0, 0, 414, 155);
+		scrollPane.setBounds(0, 0, 653, 257);
 		panel.add(scrollPane);
 		
 		
 		
 		table = new JTable(tmodel);
+		table.getTableHeader().setReorderingAllowed(false);
 		scrollPane.setViewportView(table);
 		
 		JButton btnEliminar = new JButton("Eliminar");
@@ -111,8 +116,22 @@ public class MostrarVehiculos extends JFrame {
 				}
 			}
 		});
-		btnEliminar.setBounds(276, 187, 101, 23);
+		btnEliminar.setBounds(480, 275, 101, 23);
 		panel.add(btnEliminar);
+		
+		JButton btnNewButton = new JButton("Exportar Vehiculos JSON");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String ruta = principal.obtenerRuta();
+				if(ruta == null) {
+					JOptionPane.showMessageDialog(MostrarVehiculos.this, "Operación cancelada", "CANCELADO", JOptionPane.INFORMATION_MESSAGE);
+				}else {
+					principal.guardarTextoJSON(ruta);
+				}
+			}
+		});
+		btnNewButton.setBounds(113, 275, 186, 23);
+		panel.add(btnNewButton);
 		
 		
 	}

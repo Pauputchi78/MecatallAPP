@@ -64,6 +64,8 @@ public class VentanaClientes extends JFrame {
 	 * Create the frame.
 	 */
 	public VentanaClientes() {
+		setResizable(false);
+		setIconImage(principal.logoMecatall(65, 65).getImage());
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {

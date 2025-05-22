@@ -1,10 +1,12 @@
 package main.Controlador;
 
+import java.awt.Image;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.net.URL;
 import java.nio.file.Files;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -12,6 +14,7 @@ import java.util.Collections;
 import java.util.Comparator;
 
 import javax.management.remote.JMXConnectorFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -33,6 +36,15 @@ public class principal {
 		ventanas.add(new InicioSesion());
 		ventanas.get(0).setVisible(true);
 
+	}
+	
+	public static ImageIcon logoMecatall(int alto, int ancho) {
+		URL imageUrl = principal.class.getResource("/Imagenes/LogoMecatall.png");
+		ImageIcon logo = new ImageIcon(imageUrl);
+		Image rescalada = logo.getImage().getScaledInstance(alto, ancho, Image.SCALE_SMOOTH);
+		ImageIcon anchonew = new ImageIcon(rescalada);
+		
+		return anchonew;
 	}
 	
 	public static void mostrarVentana(String nombre, boolean visibilidad) {
@@ -80,7 +92,7 @@ public class principal {
 		return null;
 	}
 	
-	public static void guardarTextoPlano(String ruta) {
+	public static void guardarTextoPlanoCliVehicu(String ruta) {
 		File f;
 		FileWriter fw;
 		BufferedWriter bw;
@@ -97,7 +109,34 @@ public class principal {
 			bw.flush();
 			bw.close();
 		}catch(Exception e) {
-			
+			e.printStackTrace();
+		}
+	}
+	
+	public static void guardarTextoJSON(String ruta) {
+		File f;
+		FileWriter fw;
+		BufferedWriter bw;
+		
+		
+		try {
+			f = new File(ruta);
+			fw = new FileWriter(f);
+			bw = new BufferedWriter(fw);
+			StringBuilder mensaje = new StringBuilder();
+			for(Cliente c : gestorClases.clientes) {
+				for(int i = 0; i< c.Vehiculos.size();i++) {
+					mensaje.append(c.Vehiculos.get(i).toStringJSON() +",\n");
+				}
+			}
+			String ini = "let datosjs = [\n";
+			mensaje.setLength(mensaje.length() - 2);
+			ini = ini + mensaje.toString() + "\n];";
+			bw.write(ini);
+			bw.flush();
+			bw.close();
+		}catch(Exception e) {
+			e.printStackTrace();
 		}
 	}
 	
@@ -105,14 +144,13 @@ public class principal {
 		File f;
 		FileReader fr;
 		BufferedReader br;
-		Boolean correcto = false;
-		ArrayList<Cliente> clientes2 = new ArrayList<Cliente>();
+		int contadorcli = -1;
+		int contadorVehi = -1;
 		try {
 			f = new File(ruta);
 			fr = new FileReader(f);
 			br = new BufferedReader(fr);
 			String leer = "";
-			int contadorcli = -1;
 			while((leer = br.readLine())!=null) {
 				String [] datos = leer.split("_");
 				if(datos[0].equalsIgnoreCase("Cliente")) {
@@ -122,32 +160,68 @@ public class principal {
 					String direc = datos[4];
 					String ciudad = datos[5];
 					Cliente c = new Cliente(nif,nombre,tel,direc,ciudad);
-					clientes2.add(c);
-					contadorcli = contadorcli +1;
+					boolean correct = conexionBDD.insertarCliente(c);
+					if(correct == true) {
+						gestorClases.clientes.add(c);
+						contadorcli = contadorcli +1;
+					}
 				}else if(datos[0].equalsIgnoreCase("Vehiculo")) {
 					String matricula = datos[1];
 					String color = datos[2];
 					String modelo = datos[3];
 					LocalDate aniomatri = LocalDate.parse(datos[4]);
-					Vehiculo v = new Vehiculo(matricula,color,modelo,aniomatri);
-					clientes2.get(contadorcli).Vehiculos.add(v);
+					String nifcliente = datos[5];
+					
+					int cli = gestorClases.buscarClientePorDNI(nifcliente);
+					if(cli == -1) {
+						System.out.println("No se ha encontrado el clinete asignado");
+					}else {
+						Vehiculo v = new Vehiculo(matricula,color,modelo,aniomatri,nifcliente);
+						boolean correct = conexionBDD.insertarVehiculo(v);
+						if(correct == true) {
+							gestorClases.clientes.get(cli).Vehiculos.add(v);
+							contadorVehi = contadorVehi +1;
+							
+						}
+					}
+					
 				}
 				
 			}
 			fr.close();
 			br.close();
-			correcto = true;
 		}catch(Exception e) {
 			e.printStackTrace();
-			correcto = false;
 		}
 		
-		if(correcto = true) {
-			gestorClases.clientes.clear();
-			gestorClases.clientes.addAll(clientes2);
-			JOptionPane.showMessageDialog(null, "Se ha cargado correctametne","DATOS CARGADOS",JOptionPane.INFORMATION_MESSAGE);
+		if(contadorcli != -1 || contadorVehi != -1) {
+			JOptionPane.showMessageDialog(null, "Se han cargado correctametne Clientes: "+( contadorcli + 1) + " Vehiculos: "+( contadorVehi + 1 ),"INSERCIÓN REALIZADA", JOptionPane.INFORMATION_MESSAGE);
 		}else {
-			System.out.println("No cargado");
+			JOptionPane.showMessageDialog(null, "Estos datos ya estan en la base de datos","INSERCIÓN NO REALIZADA",JOptionPane.INFORMATION_MESSAGE);
+		}
+	}
+	public static void guardarIncidencia(String codigo, String descripcion, String matricula, String taller, boolean situ, String ruta) {
+		File f;
+		FileWriter fw;
+		BufferedWriter bw;
+		try {
+			f = new File(ruta);
+			fw = new FileWriter(f);
+			bw = new BufferedWriter(fw);
+			String mensaje = "MECATALL APP\n\n"
+					+ "INCIDENCIA NÚMERO : "+ codigo + "\n\n"
+					+ "Incidencia del taller número "+ taller + " para el vehículo "+matricula+". \n\n"
+					+ "DESCRIPCIÓN DE INCIDENCIA:\n"+descripcion + "\n\n"; 
+			if(situ == false) {
+				mensaje = mensaje + "La incidencia está pendiente de resolver.";
+			}else {
+				mensaje = mensaje + "La incidencia ya ha sido solucionada con éxito.";
+			}
+			bw.write(mensaje);
+			bw.flush();
+			bw.close();
+		}catch(Exception e) {
+			e.printStackTrace();
 		}
 	}
 	

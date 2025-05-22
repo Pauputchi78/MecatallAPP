@@ -33,6 +33,7 @@ import main.Modelo.Vehiculo;
 
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
+import java.awt.Font;
 
 public class VistaRepararaciones extends JFrame {
 
@@ -64,6 +65,7 @@ public class VistaRepararaciones extends JFrame {
 	 * Create the frame.
 	 */
 	public VistaRepararaciones() {
+		setIconImage(principal.logoMecatall(65, 65).getImage());
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {

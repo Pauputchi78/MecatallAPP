@@ -15,10 +15,24 @@ import main.Modelo.Reparar;
 import main.Modelo.Vehiculo;
 
 public class conexionBDD {
-	public static String url = "jdbc:postgresql://localhost:5432/Mecatall";
-	public static String usuario = "postgres";
-	public static String contra = "postgres";
+	private static String url = "jdbc:postgresql://localhost:5432/Mecatall";
+	private static String usuario = "";
+	private static String contra = "";
 	
+	public static boolean validarConexion(String usu, String contr) {
+		boolean correcto = false;
+		try {
+			Connection conn = DriverManager.getConnection(conexionBDD.url, usu, contr);
+			if(conn != null) {
+				correcto = true;
+				usuario = usu;
+				contra = contr;
+			}
+		}catch(SQLException error) {
+			System.out.println("Conexion erronea");
+		}
+		return correcto;
+	}
 	
 	public static void cargarClinetesBDD() {
 		Connection conn;
@@ -80,8 +94,15 @@ public class conexionBDD {
 			}
 			conn.close();
 		}catch(SQLException e) {
-			e.printStackTrace();
-			correcto = false;
+			if (e.getSQLState().equals("23505")) {
+                System.out.println("El NIF " + nif + " ya existe en la base de datos.");
+                correcto = false;
+            } else {
+                System.err.println("Error de base de datos inesperado al insertar cliente " + nif + ": " + e.getMessage());
+                e.printStackTrace();
+            }
+            correcto = false;
+
 		}
 		return correcto;
 		
@@ -105,8 +126,9 @@ public class conexionBDD {
 					String color = respuesta.getString(2);
 					String modelo = respuesta.getString(3);
 					String anio = respuesta.getString(4);
+					String nifcli = respuesta.getString(5);
 					LocalDate fmatri = LocalDate.parse(anio);
-					Vehiculo v = new Vehiculo(matricula, color, modelo, fmatri);
+					Vehiculo v = new Vehiculo(matricula, color, modelo, fmatri, nifcli);
 					c.Vehiculos.add(v);
 				}
 			}else {
@@ -119,7 +141,7 @@ public class conexionBDD {
 		
 	}
 	
-	public static boolean insertarVehiculo(Vehiculo v , String nif) {
+	public static boolean insertarVehiculo(Vehiculo v ) {
 		boolean correcto = false;
 		Connection conn;
 		String consulta= "INSERT INTO VEHICULO VALUES (?,?,?,?,?)";
@@ -134,7 +156,7 @@ public class conexionBDD {
 				sentencia.setString(2, v.getColor());
 				sentencia.setString(3, v.getModelo());
 				sentencia.setDate(4, fechasql);
-				sentencia.setString(5, nif);
+				sentencia.setString(5, v.getNifcliente());
 				int filasafect = sentencia.executeUpdate();
 				if(filasafect > 0) {
 					correcto = true;
@@ -144,8 +166,14 @@ public class conexionBDD {
 			}
 			conn.close();
 		}catch(SQLException e) {
-			e.printStackTrace();
-			correcto = false;
+			if (e.getSQLState().equals("23505")) {
+                System.out.println("La matricula " + v.getMatricula() + " ya existe en la base de datos.");
+                correcto = false;
+            } else {
+                System.err.println("Error de base de datos inesperado al insertar vehiculo " + v.getMatricula() + ": " + e.getMessage());
+                e.printStackTrace();
+            }
+            correcto = false;
 		}  
 		return correcto;
 	}

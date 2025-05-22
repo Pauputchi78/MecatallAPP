@@ -10,6 +10,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import main.Controlador.conexionBDD;
+import main.Controlador.principal;
 import main.Modelo.Incidencia;
 
 import javax.swing.JLabel;
@@ -36,6 +37,8 @@ public class IMIncidencia extends JDialog {
 	 */
 	public IMIncidencia(JFrame padre, String codi , String matricula, String taller) {
 		super(padre,true);
+		setResizable(false);
+		setIconImage(principal.logoMecatall(65, 65).getImage());
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowActivated(WindowEvent e) {

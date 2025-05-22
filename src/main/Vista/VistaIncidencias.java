@@ -14,6 +14,8 @@ import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JScrollPane;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import javax.swing.JButton;
 import javax.swing.JTable;
@@ -53,6 +55,8 @@ public class VistaIncidencias extends JFrame {
 	 * Create the frame.
 	 */
 	public VistaIncidencias() {
+		setResizable(false);
+		setIconImage(principal.logoMecatall(65, 65).getImage());
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
@@ -71,7 +75,7 @@ public class VistaIncidencias extends JFrame {
 		};
 		
 		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-		setBounds(100, 100, 520, 415);
+		setBounds(100, 100, 665, 435);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
@@ -79,18 +83,18 @@ public class VistaIncidencias extends JFrame {
 		contentPane.setLayout(null);
 		
 		JPanel panel = new JPanel();
-		panel.setBounds(10, 11, 484, 354);
+		panel.setBounds(10, 11, 629, 374);
 		contentPane.add(panel);
 		panel.setLayout(null);
 		
 		String [] reparaciones = conexionBDD.cargarReparaciones();
 		comboBoxrep = new JComboBox();
 		comboBoxrep.setModel(new DefaultComboBoxModel(reparaciones));
-		comboBoxrep.setBounds(118, 11, 233, 22);
+		comboBoxrep.setBounds(243, 11, 233, 22);
 		panel.add(comboBoxrep);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(10, 99, 464, 244);
+		scrollPane.setBounds(10, 85, 609, 278);
 		panel.add(scrollPane);
 		
 		table = new JTable(tmodel);
@@ -111,11 +115,12 @@ public class VistaIncidencias extends JFrame {
 				}
 			}
 		});
+		table.getTableHeader().setReorderingAllowed(false);
 		scrollPane.setViewportView(table);
 		
 		JLabel lblNewLabel = new JLabel("Reparacion :");
 		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 13));
-		lblNewLabel.setBounds(21, 12, 104, 18);
+		lblNewLabel.setBounds(129, 12, 104, 18);
 		panel.add(lblNewLabel);
 		
 		JButton btnNewButton = new JButton("Insertar Incidencia");
@@ -143,7 +148,7 @@ public class VistaIncidencias extends JFrame {
 				cargarTabla(inci);
 			}
 		});
-		btnBuscar.setBounds(172, 51, 146, 23);
+		btnBuscar.setBounds(317, 51, 146, 23);
 		panel.add(btnBuscar);
 		
 		JButton btnVerTodas = new JButton("Ver Todas");
@@ -153,8 +158,35 @@ public class VistaIncidencias extends JFrame {
 				cargarTabla(inci);
 			}
 		});
-		btnVerTodas.setBounds(328, 51, 146, 23);
+		btnVerTodas.setBounds(473, 51, 146, 23);
 		panel.add(btnVerTodas);
+		
+		JButton btnExportarIncidencia = new JButton("Exportar Incidencia");
+		btnExportarIncidencia.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int fila = table.getSelectedRow();
+				if(fila >= 0) {
+					String ruta = principal.obtenerRuta();
+					if(ruta != null) {
+						String[] datos = ((String) comboBoxrep.getSelectedItem()).split(" ");
+						
+						String codigo = (String) tmodel.getValueAt(fila, 0);
+						String descrip = (String) tmodel.getValueAt(fila, 1);
+						Boolean situ = (Boolean) table.getValueAt(fila, 2);
+						String matricula = datos[1];
+						String taller = datos[3];
+						System.out.println(situ);
+						principal.guardarIncidencia(codigo, descrip, matricula, taller, situ, ruta);
+						JOptionPane.showMessageDialog(VistaIncidencias.this, "Se ha exportado incidencia", "INCIDENCIA EXPORTADA",JOptionPane.INFORMATION_MESSAGE);
+					}
+					
+				}else {
+					JOptionPane.showMessageDialog(VistaIncidencias.this, "Seleccione incidencia a exportar", "SELECCIONAR INCIDENCIA",JOptionPane.ERROR_MESSAGE);
+				}
+			}
+		});
+		btnExportarIncidencia.setBounds(161, 51, 146, 23);
+		panel.add(btnExportarIncidencia);
 	}
 	
 	public void cargarTabla(Object[] incidencias) {

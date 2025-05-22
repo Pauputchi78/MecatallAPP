@@ -37,6 +37,8 @@ public class SeleccionarCliente extends JDialog {
 
 	public SeleccionarCliente(JFrame padre) {
 		super(padre, true);
+		setResizable(false);
+		setIconImage(principal.logoMecatall(65, 65).getImage());
 	
 		addWindowListener(new WindowAdapter() {
 			@Override
@@ -68,6 +70,7 @@ public class SeleccionarCliente extends JDialog {
 		};
 		
 		table = new JTable(tmodel);
+		table.getTableHeader().setReorderingAllowed(false);
 		scrollPane.setViewportView(table);
 		{
 			JPanel buttonPane = new JPanel();

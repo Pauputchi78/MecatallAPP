@@ -54,7 +54,7 @@ public class Inicio extends JFrame {
 	 * Create the frame.
 	 */
 	public Inicio() {
-		
+		setIconImage(principal.logoMecatall(65, 65).getImage());
 		setResizable(false);
 		setTitle("Inicio");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -72,11 +72,9 @@ public class Inicio extends JFrame {
 		contentPane.add(panel);
 		panel.setLayout(null);
 		
-		ImageIcon logo = new ImageIcon(getClass().getResource("/Imagenes/LogoMecatall.png"));
-		Image rescalada = logo.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH);
-		ImageIcon anchonew = new ImageIcon(rescalada);
 		
-		JLabel lblLogo = new JLabel(anchonew);
+		
+		JLabel lblLogo = new JLabel(principal.logoMecatall(200, 200));
 		lblLogo.setBounds(60, 130, 206, 187);
 		panel.add(lblLogo);
 		
@@ -145,27 +143,32 @@ public class Inicio extends JFrame {
 				if(ruta == null){
 					System.out.println("Operación cancelada");
 				}else {
+					conexionBDD.cargarClinetesBDD();
 					principal.cargarTextoPlano(ruta);
 					
 				}
 			}
 		});
-		btnNewButton.setBounds(23, 96, 89, 23);
+		btnNewButton.setBounds(10, 96, 129, 23);
 		panel.add(btnNewButton);
 		
-		JButton btnGuardar = new JButton("Guardar");
+		JButton btnGuardar = new JButton("Exportar\r");
 		btnGuardar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String ruta = principal.obtenerRuta();
 				if(ruta == null){
 					System.out.println("Operación cancelada");
 				}else {
-					principal.guardarTextoPlano(ruta);
+					conexionBDD.cargarClinetesBDD();
+					for(Cliente c : gestorClases.clientes) {
+						conexionBDD.cargarVehiculos(c);
+					}
+					principal.guardarTextoPlanoCliVehicu(ruta);
 					
 				}
 			}
 		});
-		btnGuardar.setBounds(223, 96, 89, 23);
+		btnGuardar.setBounds(186, 96, 129, 23);
 		panel.add(btnGuardar);
 	}
 }
