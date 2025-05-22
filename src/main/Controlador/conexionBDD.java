@@ -7,14 +7,17 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
+import java.util.ArrayList;
 
 import main.Modelo.Cliente;
+import main.Modelo.Incidencia;
+import main.Modelo.Reparar;
 import main.Modelo.Vehiculo;
 
 public class conexionBDD {
 	public static String url = "jdbc:postgresql://localhost:5432/Mecatall";
-	public static String usuario = "";
-	public static String contra = "";
+	public static String usuario = "postgres";
+	public static String contra = "postgres";
 	
 	
 	public static void cargarClinetesBDD() {
@@ -273,5 +276,405 @@ public class conexionBDD {
 		}
 		return correcto;
 	}
+	
+	public static String[] cargarMatriculas() {
+		String [] matriculas = null; 
+		Connection conn;
+		try {
+			
+			Statement sentencia = null;
+			ResultSet respuesta = null;
+			conn = DriverManager.getConnection(url, usuario, contra);
+			if(conn != null) {
+				sentencia = conn.createStatement();
+				String consulta= "select matricula from vehiculo order by matricula ASC";
+				respuesta = sentencia.executeQuery(consulta);
+				ArrayList<String> matri = new ArrayList<String>();
+				while(respuesta.next()) {
+					String matricula = respuesta.getString(1);
+					matri.add(matricula);
+				}
+				matriculas = matri.toArray(new String[0]);
+				
+			}else {
+				System.out.println("Error conex");
+			}
+			conn.close();	
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return matriculas;
+	}
+	
+	public static String[] cargarTaller() {
+		String [] cod_taller = null; 
+		Connection conn;
+		try {
+			
+			Statement sentencia = null;
+			ResultSet respuesta = null;
+			conn = DriverManager.getConnection(url, usuario, contra);
+			if(conn != null) {
+				sentencia = conn.createStatement();
+				String consulta= "select cod_sucursal from taller order by cod_sucursal ASC";
+				respuesta = sentencia.executeQuery(consulta);
+				ArrayList<String> cod = new ArrayList<String>();
+				while(respuesta.next()) {
+					String codigo = respuesta.getString(1);
+					cod.add(codigo);
+				}
+				cod_taller = cod.toArray(new String[0]);
+				
+			}else {
+				System.out.println("Error conex");
+			}
+			conn.close();	
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return cod_taller;
+	}
+	
+	public static boolean insertarReparacion(Reparar rep) {
+		boolean correcto = false;
+		Connection conn;
+		String consulta= "INSERT INTO REPARAR VALUES (?,?,?)";
+		java.sql.Date fechasql = java.sql.Date.valueOf(rep.getFechaparte());
+		try {
+			
+			PreparedStatement sentencia = null;
+			conn = DriverManager.getConnection(url, usuario, contra);
+			if(conn != null) {
+				sentencia = conn.prepareStatement(consulta);
+				sentencia.setString(1, rep.getMatricula());
+				sentencia.setString(2, rep.getCod_taller());
+				sentencia.setDate(3, fechasql);
+				int filasafect = sentencia.executeUpdate();
+				if(filasafect > 0) {
+					correcto = true;
+				}
+			}else {
+				System.out.println("Error conex");
+			}
+			conn.close();
+		}catch(SQLException e) {
+			e.printStackTrace();
+			correcto = false;
+		}  
+		return correcto;
+	}
+	
+	public static boolean comprobarReparacion(String matricula, String taller) {
+		boolean correcto = false;
+		Connection conn;
+		try {
+			PreparedStatement sentencia = null;
+			ResultSet respuesta;
+			String consulta= "SELECT * FROM REPARAR WHERE matricula = ? and taller = ? ";
+			conn = DriverManager.getConnection(url, usuario, contra);
+			if(conn != null) {
+				sentencia = conn.prepareStatement(consulta);
+				sentencia.setString(1, matricula);
+				sentencia.setString(2, taller);
+				respuesta = sentencia.executeQuery();
+				if(respuesta.next()) {
+					correcto = true;
+				}
+				
+			}else {
+				System.out.println("Error conex");
+			}
+			conn.close();
+			return correcto;
+			
+			
+		}catch(SQLException e) {
+			e.printStackTrace();
+			correcto = false;
+		}
+		return correcto;
+	}
+	
+	public static String[] cargarReparaciones() {
+		String [] reparaciones = null; 
+		Connection conn;
+		try {
+			
+			Statement sentencia = null;
+			ResultSet respuesta = null;
+			conn = DriverManager.getConnection(url, usuario, contra);
+			if(conn != null) {
+				sentencia = conn.createStatement();
+				String consulta= "select taller, matricula from reparar ";
+				respuesta = sentencia.executeQuery(consulta);
+				ArrayList<String> rep = new ArrayList<String>();
+				while(respuesta.next()) {
+					
+					String taller = respuesta.getString(1);
+					String matricula = respuesta.getString(2);
+					String mensaje = "Matricula: "+matricula+" Taller: "+taller;
+					rep.add(mensaje);
+				}
+				reparaciones = rep.toArray(new String[0]);
+				
+			}else {
+				System.out.println("Error conex");
+			}
+			conn.close();	
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return reparaciones;
+	}
+	
+	public static boolean eliminarReparacionesXMatricula(String matricula) {
+		boolean correcto = false;
+		Connection conn;
+		try {
+			String consulta = "DELETE FROM REPARAR WHERE matricula = ?";
+			PreparedStatement sentencia = null;
+			conn = DriverManager.getConnection(url, usuario, contra);
+			if(conn != null) {
+				sentencia = conn.prepareStatement(consulta);
+				sentencia.setString(1, matricula);
+				int fila = sentencia.executeUpdate();
+				if(fila > 0) {
+					correcto = true;
+				}
+			}else {
+				System.out.println("Error conex");
+			}
+			conn.close();	
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}
+		return correcto;
+	}
+	
+	public static Object[] cargarIncidenciasMT(String matricula, String taller) {
+		Object [] incidencias = null; 
+		Connection conn;
+		try {
+			
+			PreparedStatement sentencia = null;
+			ResultSet respuesta;
+			String consulta= "SELECT * FROM INCIDENCIA WHERE matricula = ? and taller = ? ORDER BY cod_incidencia ASC";
+			conn = DriverManager.getConnection(url, usuario, contra);
+			if(conn != null) {
+				sentencia = conn.prepareStatement(consulta);
+				sentencia.setString(1, matricula);
+				sentencia.setString(2, taller);
+				respuesta = sentencia.executeQuery();
+				ArrayList<Incidencia> inci = new ArrayList<Incidencia>();
+				while(respuesta.next()) {
+					String cod = respuesta.getString(1);
+					String descripcion = respuesta.getString(2);
+					boolean resuelto = respuesta.getBoolean(5);
+					Incidencia i = new Incidencia(cod, descripcion, taller, matricula, resuelto);
+					inci.add(i);
+				}
+				incidencias = inci.toArray();
+				
+			}else {
+				System.out.println("Error conex");
+			}
+			conn.close();	
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return incidencias;
+	}
+	
+	public static Incidencia cargarIncidenciaCI(String codigo) {
+		Incidencia incidencia = null; 
+		Connection conn;
+		try {
+			
+			PreparedStatement sentencia = null;
+			ResultSet respuesta;
+			String consulta= "SELECT * FROM INCIDENCIA WHERE cod_incidencia = ? ";
+			conn = DriverManager.getConnection(url, usuario, contra);
+			if(conn != null) {
+				sentencia = conn.prepareStatement(consulta);
+				sentencia.setString(1, codigo);
+				respuesta = sentencia.executeQuery();
+				ArrayList<Incidencia> inci = new ArrayList<Incidencia>();
+				while(respuesta.next()) {
+					String cod = respuesta.getString(1);
+					String descripcion = respuesta.getString(2);
+					String taller = respuesta.getString(3);
+					String matricula = respuesta.getString(4);
+					boolean resuelto = respuesta.getBoolean(5);
+					Incidencia i = new Incidencia(cod, descripcion, taller, matricula, resuelto);
+					incidencia = i;
+				}
+				
+			}else {
+				System.out.println("Error conex");
+			}
+			conn.close();	
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return incidencia;
+	}
+	public static Object[] cargarIncidencias() {
+		Object [] incidencias = null; 
+		Connection conn;
+		try {
+			
+			PreparedStatement sentencia = null;
+			ResultSet respuesta;
+			String consulta= "SELECT * FROM INCIDENCIA ORDER BY cod_incidencia ASC";
+			conn = DriverManager.getConnection(url, usuario, contra);
+			if(conn != null) {
+				sentencia = conn.prepareStatement(consulta);
+				respuesta = sentencia.executeQuery();
+				ArrayList<Incidencia> inci = new ArrayList<Incidencia>();
+				while(respuesta.next()) {
+					String cod = respuesta.getString(1);
+					String descripcion = respuesta.getString(2);
+					String taller = respuesta.getString(3);
+					String matricula = respuesta.getString(4);
+					boolean resuelto = respuesta.getBoolean(5);
+					Incidencia i = new Incidencia(cod, descripcion, taller, matricula, resuelto);
+					inci.add(i);
+				}
+				incidencias = inci.toArray();
+				
+			}else {
+				System.out.println("Error conex");
+			}
+			conn.close();	
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return incidencias;
+	}
+	
+	public static boolean eliminarIncidenciasXMatricula(String matricula) {
+		boolean correcto = false;
+		Connection conn;
+		try {
+			String consulta = "DELETE FROM INCIDENCIA WHERE matricula = ?";
+			PreparedStatement sentencia = null;
+			conn = DriverManager.getConnection(url, usuario, contra);
+			if(conn != null) {
+				sentencia = conn.prepareStatement(consulta);
+				sentencia.setString(1, matricula);
+				int fila = sentencia.executeUpdate();
+				if(fila > 0) {
+					correcto = true;
+				}
+			}else {
+				System.out.println("Error conex");
+			}
+			conn.close();	
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}
+		return correcto;
+	}
+	
+	public static boolean InsertarIncidencia(String mensaje, String taller, String matricula) {
+		boolean correcto = false;
+		Connection conn;
+		try {
+			String consulta = "SELECT insertarIncidencia(?, ?, ?)";
+			PreparedStatement sentencia = null;
+			conn = DriverManager.getConnection(url, usuario, contra);
+			if(conn != null) {
+				sentencia = conn.prepareStatement(consulta);
+				sentencia.setString(1, mensaje);
+				sentencia.setString(2, taller);
+				sentencia.setString(3, matricula);
+				correcto = sentencia.execute();
+				
+			}else {
+				System.out.println("Error conex");
+			}
+			conn.close();	
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}
+		return correcto;
+	}
+	
+	public static boolean modificarIncidencia(Incidencia i) {
+		boolean correcto = false;
+		Connection conn;
+		try {
+			String consulta = "UPDATE INCIDENCIA SET descripcion = ?, taller = ?, matricula = ?, resuelto = ? WHERE cod_incidencia = ?";
+			PreparedStatement sentencia = null;
+			conn = DriverManager.getConnection(url, usuario, contra);
+			if(conn != null) {
+				sentencia = conn.prepareStatement(consulta);
+				sentencia.setString(1, i.getDescripcion());
+				sentencia.setString(2, i.getTaller());
+				sentencia.setString(3, i.getMatricula());
+				sentencia.setBoolean(4, i.isResuelto());
+				sentencia.setString(5, i.getCod_incidencia());
+				int fila = sentencia.executeUpdate();
+				if(fila > 0) {
+					correcto = true;
+				}
+			}else {
+				System.out.println("Error conex");
+			}
+			conn.close();	
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}
+		return correcto;
+	}
+	
+	
+	
+	
+//Eliminaremos las tablas que no vamos a utilizar ya que hay claves FK que impiden eliminaciones en clinetes y Vehiculos	
+	public static void eliminarSuminsitros() {
+		Connection conn;
+		try {
+			String consulta = "DELETE FROM SUMINISTRA";
+			PreparedStatement sentencia = null;
+			conn = DriverManager.getConnection(url, usuario, contra);
+			if(conn != null) {
+				sentencia = conn.prepareStatement(consulta);
+				int fila = sentencia.executeUpdate();
+			}else {
+				System.out.println("Error conex");
+			}
+			conn.close();	
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static void eliminarTrabajaCon() {
+		Connection conn;
+		try {
+			String consulta = "DELETE FROM TRABAJA_CON";
+			PreparedStatement sentencia = null;
+			conn = DriverManager.getConnection(url, usuario, contra);
+			if(conn != null) {
+				sentencia = conn.prepareStatement(consulta);
+				int fila = sentencia.executeUpdate();
+			}else {
+				System.out.println("Error conex");
+			}
+			conn.close();	
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}
 
+	}
+	
+	
+	
 }

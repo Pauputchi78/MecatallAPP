@@ -17,9 +17,13 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+
+import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class MostrarVehiculos extends JFrame {
 
@@ -85,11 +89,15 @@ public class MostrarVehiculos extends JFrame {
 				}else {
 					int select = table.getSelectedRow();
 					Object matricula = table.getValueAt(select, 0);
-					String mensaje = "Esta seguro que desa eliminar el Vehiculo "+ matricula.toString();
-					int respuesta = JOptionPane.showConfirmDialog(MostrarVehiculos.this, mensaje,"Eliminar Cliente",JOptionPane.YES_NO_OPTION);
+					String mensaje = "Esta seguro que desa eliminar el Vehiculo "+ matricula.toString() + "? \n Se eliminaran sus reparaciones e incidencias.";
+					int respuesta = JOptionPane.showConfirmDialog(MostrarVehiculos.this, mensaje,"Eliminar Vehiculo",JOptionPane.YES_NO_OPTION);
 					if(respuesta == JOptionPane.YES_OPTION) {
-						boolean eliminado = conexionBDD.eliminarVehiculoMatricula(matricula.toString());
-						if(eliminado == true) {
+						
+						conexionBDD.eliminarSuminsitros();
+						conexionBDD.eliminarIncidenciasXMatricula(matricula.toString());
+						conexionBDD.eliminarReparacionesXMatricula(matricula.toString());
+						boolean Elivehi = conexionBDD.eliminarVehiculoMatricula(matricula.toString());
+						if(Elivehi) {
 							tmodel.removeRow(select);
 							
 							JOptionPane.showMessageDialog(MostrarVehiculos.this, "El vehiculo se ha eliminado", "CORRECTO", JOptionPane.INFORMATION_MESSAGE);
@@ -103,12 +111,8 @@ public class MostrarVehiculos extends JFrame {
 				}
 			}
 		});
-		btnEliminar.setBounds(276, 186, 101, 23);
+		btnEliminar.setBounds(276, 187, 101, 23);
 		panel.add(btnEliminar);
-		
-		JButton btnModificar = new JButton("Modificar");
-		btnModificar.setBounds(56, 186, 101, 23);
-		panel.add(btnModificar);
 		
 		
 	}

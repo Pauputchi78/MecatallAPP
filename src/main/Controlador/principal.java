@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
+import javax.management.remote.JMXConnectorFactory;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -53,6 +54,14 @@ public class principal {
 				ventanas.add(v);
 			}else if(nombre.equalsIgnoreCase("Inicio")) {
 				JFrame v = new Inicio();
+				v.setVisible(visibilidad);
+				ventanas.add(v);
+			}else if(nombre.equalsIgnoreCase("VistaReparaciones")) {
+				JFrame v = new VistaRepararaciones();
+				v.setVisible(visibilidad);
+				ventanas.add(v);
+			}else if(nombre.equalsIgnoreCase("Incidencias")) {
+				JFrame v = new VistaIncidencias();
 				v.setVisible(visibilidad);
 				ventanas.add(v);
 			}

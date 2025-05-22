@@ -261,7 +261,16 @@ public class VentanaClientes extends JFrame {
 					String mensaje = "Esta seguro que desa eliminar este cliente?\nTambien se elimnaran sus Vehiculos e Incidencias";
 					int respuesta = JOptionPane.showConfirmDialog(VentanaClientes.this, mensaje,"Eliminar Cliente",JOptionPane.YES_NO_OPTION);
 					if(respuesta == JOptionPane.YES_OPTION) {
+						
 						Cliente c = gestorClases.clientes.get(posi);
+						conexionBDD.cargarVehiculos(c);
+						
+						conexionBDD.eliminarSuminsitros();
+						conexionBDD.eliminarTrabajaCon();
+						for(int i = 0 ; i<c.Vehiculos.size();i++) {
+							conexionBDD.eliminarIncidenciasXMatricula(c.Vehiculos.get(i).getMatricula());
+							conexionBDD.eliminarReparacionesXMatricula(c.Vehiculos.get(i).getMatricula());
+						}
 						conexionBDD.eliminarVehiculosCliente(c.getNif());
 						c.Vehiculos.clear();
 						boolean correcto = conexionBDD.eliminarCliente(c.getNif());

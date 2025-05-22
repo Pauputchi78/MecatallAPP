@@ -113,6 +113,26 @@ public class Inicio extends JFrame {
 		});
 		menuBar.add(mnNewMenu_1);
 		
+		JMenu mnNewMenu_2 = new JMenu("Reparaciones");
+		mnNewMenu_2.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				principal.mostrarVentana("VistaReparaciones", true);
+				setVisible(false);
+			}
+		});
+		menuBar.add(mnNewMenu_2);
+		
+		JMenu mnNewMenu_3 = new JMenu("Incidencias");
+		mnNewMenu_3.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				principal.mostrarVentana("Incidencias", true);
+				setVisible(false);
+			}
+		});
+		menuBar.add(mnNewMenu_3);
+		
 		JLabel lblNewLabel = new JLabel("MECATALL APP");
 		lblNewLabel.setFont(new Font("Segoe Print", Font.BOLD, 21));
 		lblNewLabel.setBounds(79, 45, 196, 30);
@@ -148,6 +168,4 @@ public class Inicio extends JFrame {
 		btnGuardar.setBounds(223, 96, 89, 23);
 		panel.add(btnGuardar);
 	}
-	
-	
 }
